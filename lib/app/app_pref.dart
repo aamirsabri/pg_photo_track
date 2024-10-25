@@ -6,22 +6,23 @@ class AppPreference {
   SharedPreferences _sharedPreferences;
   static String USER_ID = "USERNAME";
   static String PASSWORD = "PASSWORD";
+  static String IMEI = "IMEI";
 
   // AppP(){
   //   this._sharedPreferences = SharedPreferences.getInstance();
   // }
   AppPreference(this._sharedPreferences);
-  Future<String?> getEmpId() async {
-    String? empId = _sharedPreferences.getString(PREF_KEY_EMP_ID);
-    if (empId == null || empId.isEmpty) {
+  Future<String?> getUserId() async {
+    String? userId = _sharedPreferences.getString(USER_ID);
+    if (userId == null || userId.isEmpty) {
       return null;
     } else {
-      return empId;
+      return userId;
     }
   }
 
-  Future setEmpId(String empId) async {
-    await _sharedPreferences.setString(PREF_KEY_EMP_ID, empId);
+  Future setUserId(String userId) async {
+    await _sharedPreferences.setString(USER_ID, userId);
   }
 
   Future getValue(String key) async {

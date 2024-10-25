@@ -20,7 +20,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _userIdController = TextEditingController();
-  final TextEditingController _companyController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   LoginViewModelController? _loginViewModelController;
 
@@ -87,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       "PG VISIT PICS",
                       style: TextStyle(
                           fontFamily: "nova", fontSize: FontSize.extraBigSize),
@@ -131,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
               ),
-              // SizedBox(height: 48.0),
+              SizedBox(height: 48.0),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 18, horizontal: 42),

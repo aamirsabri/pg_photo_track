@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:pg_photo_track/domain/user_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'presentation/route_manager.dart';
@@ -11,7 +12,7 @@ void main() {
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(MultiProvider(
     providers: [
-      // ChangeNotifierProvider(create: (context) => UserDetailProvider()),
+      ChangeNotifierProvider(create: (context) => UserDetailProvider()),
     ],
     child: MyApp(),
   ));

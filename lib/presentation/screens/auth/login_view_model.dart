@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:pg_photo_track/app/api_constants.dart';
+import 'package:pg_photo_track/app/apis.dart';
+import 'package:pg_photo_track/app/app_pref.dart';
+import 'package:pg_photo_track/domain/user.dart';
+import 'package:pg_photo_track/domain/user_provider.dart';
 import 'package:pg_photo_track/model/request.dart';
 import 'package:pg_photo_track/utils/deviceinfo.dart';
 import 'package:pg_photo_track/utils/failure.dart';
@@ -11,7 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LoginViewModelController {
   BuildContext context;
   LoginViewModelController(this.context);
-  Future<dynamic?> login(String empId, String password) async {
+  Future<dynamic?> login(String userName, String password) async {
     EasyLoading.show();
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String version = packageInfo.version;
@@ -23,27 +28,29 @@ class LoginViewModelController {
     } else {
       print("device info " + deviceInfo.toString());
     }
-    // var result = await AppServiceClient.login(LoginRequest(
-    //     companyId: companyId,
-    //     empId: empId.toLowerCase(),
-    //     password: password,
-    //     imei: deviceInfo.toString(),
-    //     version: version.toString()));
-    // print("result " + result.toString());
-    // if (result is User) {
-    //   Provider.of<UserDetailProvider>(context, listen: false)
-    //       .updateUser(result);
-    //   SharedPreferences sharedPreferences =
-    //       await SharedPreferences.getInstance();
-    //   AppPreference appPreference = AppPreference(sharedPreferences);
-    //   appPreference.setPref(AppPreference.USER_ID, empId);
-    //   appPreference.setPref(AppPreference.PASSWORD, password);
-    //   sharedPreferences.setInt(AppPreference.COMPANY_ID, companyId);
+    var result = await AppServiceClient.login(LoginRequest(
+      apiKey: ApiConstants.APIKEY_loginVAL,
+      usrCode: userName.toLowerCase(),
+      usrPass: password,
+      appNo: ApiConstants.APP_NO_VAL,
+      imei: deviceInfo.toString(),
+    ));
 
-    //   return result;
-    // } else {
-    //   return result;
-    // }
+    print("result " + result.toString());
+    if (result is UserModel) {
+      // Provider.of<UserDetailProvider>(context, listen: false)
+      //     .updateUser(result);
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+      AppPreference appPreference = AppPreference(sharedPreferences);
+      appPreference.setPref(AppPreference.USER_ID, userName);
+      appPreference.setPref(AppPreference.PASSWORD, password);
+      appPreference.setPref(AppPreference.IMEI, deviceInfo);
+
+      return result;
+    } else {
+      return result;
+    }
   }
 
   Future<dynamic> autoLogin() async {
