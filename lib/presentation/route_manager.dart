@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pg_photo_track/model/request.dart';
+import 'package:pg_photo_track/presentation/screens/auth/login.dart';
 import 'package:pg_photo_track/presentation/screens/home_screen.dart';
 
 import 'color_manager.dart';
@@ -8,7 +10,7 @@ import 'style_manager.dart';
 class Routes {
   static const String loginRoute = "/login";
   static const String homeRoute = "/home";
-  static const String registerRoute = "/register";
+  static const String otpRoute = "/otp";
   static const String mainRoute = "/";
   static const String testRoute = "/test";
 }
@@ -19,6 +21,10 @@ class RouteGenerator {
       case Routes.homeRoute:
         {
           return MaterialPageRoute(builder: (_) => HomeScreen());
+        }
+      case Routes.loginRoute:
+        {
+          return MaterialPageRoute(builder: (_) => LoginScreen());
         }
 
       default:
