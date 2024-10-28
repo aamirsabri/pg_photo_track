@@ -25,14 +25,16 @@ class LoginRequest {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      ApiConstants.KEY: apiKey,
-      ApiConstants.USER_CODE: usrCode,
-      ApiConstants.USER_PASS: usrPass,
-      ApiConstants.APP_NO: appNo,
-      ApiConstants.IMEI: imei,
-    };
+  List<Map<String, dynamic>> toJson() {
+    return [
+      {
+        ApiConstants.KEY: apiKey,
+        ApiConstants.USER_CODE: usrCode,
+        ApiConstants.USER_PASS: usrPass,
+        ApiConstants.APP_NO: appNo,
+        ApiConstants.IMEI: imei,
+      }
+    ];
   }
 }
 
@@ -61,13 +63,41 @@ class OTPRequest {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      ApiConstants.KEY: apiKey,
-      ApiConstants.USER_CODE: usrCode,
-      ApiConstants.OTP: otp,
-      ApiConstants.APP_NO: appNo,
-      ApiConstants.IMEI: imei,
-    };
+  List<Map<String, dynamic>> toJson() {
+    return [
+      {
+        ApiConstants.KEY: apiKey,
+        ApiConstants.USER_CODE: usrCode,
+        ApiConstants.OTP: otp,
+        ApiConstants.APP_NO: appNo,
+        ApiConstants.IMEI: imei,
+      }
+    ];
   }
+}
+
+class Category {
+  final String id;
+  final String name;
+
+  Category({required this.id, required this.name});
+
+  factory Category.fromJson(Map<String, dynamic> json) {
+    return Category(
+      id: json['id'] as String,
+      name: json['name'] as String,
+    );
+  }
+}
+
+class VisitDetail {
+  String label;
+  String remarks;
+  Category? selectedCategory;
+
+  VisitDetail({
+    required this.label,
+    required this.remarks,
+    this.selectedCategory,
+  });
 }

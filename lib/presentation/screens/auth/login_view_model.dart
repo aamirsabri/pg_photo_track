@@ -5,12 +5,11 @@ import 'package:pg_photo_track/app/api_constants.dart';
 import 'package:pg_photo_track/app/apis.dart';
 import 'package:pg_photo_track/app/app_pref.dart';
 import 'package:pg_photo_track/domain/user.dart';
-import 'package:pg_photo_track/domain/user_provider.dart';
+
 import 'package:pg_photo_track/model/request.dart';
 import 'package:pg_photo_track/utils/deviceinfo.dart';
 import 'package:pg_photo_track/utils/failure.dart';
 
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginViewModelController {

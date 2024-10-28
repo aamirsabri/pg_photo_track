@@ -3,10 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:pg_photo_track/data/providers/login_provider.dart';
+import 'package:pg_photo_track/model/response.dart';
+import 'package:pg_photo_track/presentation/route_manager.dart';
 import 'package:pg_photo_track/presentation/screens/auth/login_view_model.dart';
+import 'package:pg_photo_track/presentation/screens/auth/otp_screen.dart';
 import 'package:pg_photo_track/presentation/string_manager.dart';
 import 'package:pg_photo_track/presentation/style_manager.dart';
 import 'package:pg_photo_track/presentation/value_manager.dart';
+import 'package:provider/provider.dart';
 
 import '../../color_manager.dart';
 import '../../font_manager.dart';
@@ -22,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _userIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   LoginViewModelController? _loginViewModelController;
+  LoginProvider? _loginProvider;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -64,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void didChangeDependencies() async {
     // TODO: implement didChangeDependencies
     // await _fetchData();
+    _loginProvider = Provider.of<LoginProvider>(context);
     EasyLoading.dismiss();
     super.didChangeDependencies();
   }
@@ -139,9 +146,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (_formKey.currentState!.validate()) {
                       EasyLoading.show();
                       // var user = await AppServiceClient.login(_controllerEmpId.text, _controllerPassword.text);
-                      var result = await _loginViewModelController?.login(
+                      // var result = await _loginViewModelController?.login(
+                      //     _userIdController.text, _passwordController.text);
+                      final result = await _loginProvider!.loginUser(
                           _userIdController.text, _passwordController.text);
+                      if (_loginProvider!.isLoginSuccess == true) {
+                        Navigator.pushNamed(context, Routes.homeRoute);
+                      } else if (_loginProvider!.errorMessage == null) {
+                        Navigator.pushNamed(context, Routes.otpRoute);
+                      }
 
+                      if (_loginProvider!.errorMessage != null) {
+                        EasyLoading.showError(_loginProvider!.errorMessage!);
+                      }
                       // print("user detail " + result!.empName);
                     }
                   },
@@ -162,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: AppSize.s12,
               ),
             ],

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:pg_photo_track/app/constants.dart';
 import 'package:pg_photo_track/model/request.dart';
 import 'package:pg_photo_track/model/response.dart';
@@ -41,10 +43,10 @@ class AppServiceClient {
     }
   }
 
-  static Future<dynamic> login(LoginRequest login) async {
+  static Future<dynamic> login(LoginRequest loginRequest) async {
     try {
       var url = Uri.parse(Constant.baseUrl + Constant.login);
-      Map<String, dynamic> argument = login.toJson();
+      List<Map<String, dynamic>> argument = loginRequest.toJson();
       var response = await getRawHttp(url, argument);
       if (response is Failure) {
         return response;
@@ -58,7 +60,33 @@ class AppServiceClient {
         // print("USER " + response[JSON_OBJECT_USER].toString());
         return LoginResponse.fromJson(response);
       } else {
-        return Failure(response['Status'], response['Status_message']);
+        return Failure(
+            int.parse(response['Status']), response['Status_message']);
+      }
+    } catch (e) {
+      return Failure(ResponseCode.UNKNOWN, ResponseMessage.UNKNOWN);
+    }
+  }
+
+  static Future<dynamic> sendOTP(OTPRequest otpRequest) async {
+    try {
+      var url = Uri.parse(Constant.baseUrl + Constant.submitotp);
+      List<Map<String, dynamic>> argument = otpRequest.toJson();
+      var response = await getRawHttp(url, argument);
+      if (response is Failure) {
+        return response;
+      }
+      if (response == null) {
+        return Failure(ResponseCode.UNKNOWN, ResponseMessage.UNKNOWN);
+      }
+
+      if (response['Status'] == '00' || response['Status'] == '01') {
+        print("code" + response['Status']);
+        // print("USER " + response[JSON_OBJECT_USER].toString());
+        return LoginResponse.fromJson(response);
+      } else {
+        return Failure(
+            int.parse(response['Status']), response['Status_message']);
       }
     } catch (e) {
       return Failure(ResponseCode.UNKNOWN, ResponseMessage.UNKNOWN);
@@ -82,9 +110,8 @@ class AppServiceClient {
   //   }
   // }
 
-  static Future<dynamic> getAllCompanyCodes() async {
+  static Future<dynamic> getAllPhotoCategories() async {
     try {
-      List<String> companyCodes = [];
       var url = Uri.parse(Constant.testBaseUrl + Constant.testGetCompanyIds);
       var response = await getRawHttp(url, null);
       if (response is Failure) {
@@ -94,7 +121,8 @@ class AppServiceClient {
         return Failure(ResponseCode.UNKNOWN, ResponseMessage.UNKNOWN);
       }
       if (response['status'] == 200) {
-        return response['company_codes'];
+        late List<dynamic> categoryJson = response['data'];
+        return categoryJson.map((json) => Category.fromJson(json)).toList();
       } else {
         if (response['status'] is int) {
           return Failure(response['status'], response['message']);

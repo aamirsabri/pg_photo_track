@@ -1,6 +1,6 @@
 class UserModel {
-  int userId;
-  String password;
+  String? userId;
+  String? password;
   String? imei;
   String? appNo;
   String? locationCode;
