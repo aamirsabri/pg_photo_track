@@ -6,8 +6,8 @@ class ColorManager {
   static Color backgroundDark = HexColor.fromHex("#ffffff");
   // static Color backgroundLight = HexColor.fromHex("#FFFFFF");
   static Color backgroundLight = HexColor.fromHex("#ecfaf8");
-  // static Color primary = HexColor.fromHex("#5292f7");
-  static Color primary = HexColor.fromHex("#7edcd0");
+  static Color primary = HexColor.fromHex("#4285f4");
+  // static Color primary = HexColor.fromHex("#7edcd0");
   //afc5a0c8f0eb
   // static Color primary = HexColor.fromHex("#8F5153");
 

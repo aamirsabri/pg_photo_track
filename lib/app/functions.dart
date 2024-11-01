@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -102,6 +104,16 @@ String getHHMMFromDate(String date) {
   var formatter = new DateFormat("hh:mm");
   DateTime punchInDateTime = new DateFormat("yyyy-MM-dd hh:mm").parse(date);
   return formatter.format(punchInDateTime);
+}
+
+Future<void> deleteFile(File file) async {
+  try {
+    if (await file.exists()) {
+      await file.delete();
+    }
+  } catch (e) {
+    // Error in getting access to the file.
+  }
 }
 
 String getPunchTypeMessage(String punchType) {

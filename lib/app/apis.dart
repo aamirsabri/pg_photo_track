@@ -45,7 +45,7 @@ class AppServiceClient {
 
   static Future<dynamic> login(LoginRequest loginRequest) async {
     try {
-      var url = Uri.parse(Constant.baseUrl + Constant.login);
+      var url = Uri.parse(Constant.loginUrl + Constant.login);
       List<Map<String, dynamic>> argument = loginRequest.toJson();
       var response = await getRawHttp(url, argument);
       if (response is Failure) {
@@ -70,7 +70,7 @@ class AppServiceClient {
 
   static Future<dynamic> sendOTP(OTPRequest otpRequest) async {
     try {
-      var url = Uri.parse(Constant.baseUrl + Constant.submitotp);
+      var url = Uri.parse(Constant.loginUrl + Constant.submitotp);
       List<Map<String, dynamic>> argument = otpRequest.toJson();
       var response = await getRawHttp(url, argument);
       if (response is Failure) {
@@ -112,7 +112,7 @@ class AppServiceClient {
 
   static Future<dynamic> getAllPhotoCategories() async {
     try {
-      var url = Uri.parse(Constant.testBaseUrl + Constant.testGetCompanyIds);
+      var url = Uri.parse(Constant.baseUrl + Constant.getAllCategories);
       var response = await getRawHttp(url, null);
       if (response is Failure) {
         return response;
@@ -121,7 +121,7 @@ class AppServiceClient {
         return Failure(ResponseCode.UNKNOWN, ResponseMessage.UNKNOWN);
       }
       if (response['status'] == 200) {
-        late List<dynamic> categoryJson = response['data'];
+        late List<dynamic> categoryJson = response['categories'];
         return categoryJson.map((json) => Category.fromJson(json)).toList();
       } else {
         if (response['status'] is int) {

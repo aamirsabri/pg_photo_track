@@ -84,20 +84,8 @@ class Category {
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
-      id: json['id'] as String,
-      name: json['name'] as String,
+      id: json['category_id'] as String,
+      name: json['category_name'] as String,
     );
   }
-}
-
-class VisitDetail {
-  String label;
-  String remarks;
-  Category? selectedCategory;
-
-  VisitDetail({
-    required this.label,
-    required this.remarks,
-    this.selectedCategory,
-  });
 }

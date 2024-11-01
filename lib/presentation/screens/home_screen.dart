@@ -11,7 +11,7 @@ class HomeScreen extends StatelessWidget {
         title: Text('Home Screen'),
       ),
       body: Center(
-        child: Text('Welcome to the Home Screen!'),
+        child: const Text('Welcome to the Home Screen!'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

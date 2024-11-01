@@ -41,19 +41,30 @@ class _SelectVisitCategoryScreenState extends State<SelectVisitCategoryScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  DropdownButton<Category>(
-                    isExpanded: true,
-                    value: categoryProvider.selectedCategory,
-                    hint: Text("Select a category"),
-                    items: categoryProvider.categories.map((Category category) {
-                      return DropdownMenuItem<Category>(
-                        value: category,
+                  // DropdownButton<Category>(
+                  //   isExpanded: true,
+                  //   value: categoryProvider.selectedCategory,
+                  //   hint: Text("Select a category"),
+                  //   items: categoryProvider.categories.map((Category category) {
+                  //     return DropdownMenuItem<Category>(
+                  //       value: category,
+                  //       child: Text(category.name),
+                  //     );
+                  //   }).toList(),
+                  //   onChanged: (Category? newValue) {
+                  //     print('new value');
+                  //     print(newValue!.name);
+                  //     categoryProvider.selectCategory(newValue);
+                  //   },
+                  // ),
+                  Wrap(
+                    children:
+                        categoryProvider.categories.map((Category category) {
+                      return Padding(
+                        padding: EdgeInsets.all(8),
                         child: Text(category.name),
                       );
                     }).toList(),
-                    onChanged: (Category? newValue) {
-                      categoryProvider.selectCategory(newValue);
-                    },
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
@@ -62,7 +73,7 @@ class _SelectVisitCategoryScreenState extends State<SelectVisitCategoryScreen> {
                             // Navigate to the next screen
                           }
                         : null,
-                    child: Text("Next"),
+                    child: Text("Next1"),
                   ),
                 ],
               ),

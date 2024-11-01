@@ -12,5 +12,5 @@ class ApiConstants {
   static const APIKEY_loginVAL = "pgvclit001001apiloginval-";
   static const saveESD_APIKEY = "pgvclit002002apisaveESD--";
 
-  static const APP_NO_VAL = "1";
+  static const APP_NO_VAL = "110";
 }
