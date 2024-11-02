@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:pg_photo_track/app/api_constants.dart';
 import 'package:pg_photo_track/app/constants.dart';
 import 'package:pg_photo_track/model/request.dart';
 import 'package:pg_photo_track/model/response.dart';
@@ -123,6 +124,35 @@ class AppServiceClient {
       if (response['status'] == 200) {
         late List<dynamic> categoryJson = response['categories'];
         return categoryJson.map((json) => Category.fromJson(json)).toList();
+      } else {
+        if (response['status'] is int) {
+          return Failure(response['status'], response['message']);
+        } else {
+          return Failure(ResponseCode.UNKNOWN, ResponseMessage.UNKNOWN);
+        }
+      }
+    } catch (e) {
+      return Failure(ResponseCode.UNKNOWN, ResponseMessage.UNKNOWN);
+    }
+  }
+
+  static Future<dynamic> getRecentUploads(String username) async {
+    try {
+      var url = Uri.parse(Constant.baseUrl + Constant.getRecentUploads);
+      Map<String, dynamic> argument = {ApiConstants.JSON_USER_ID: "5300500"};
+      var response = await getRawHttp(url, argument);
+      if (response is Failure) {
+        return response;
+      }
+      if (response == null) {
+        return Failure(ResponseCode.UNKNOWN, ResponseMessage.UNKNOWN);
+      }
+      if (response['status'] == 200) {
+        late List<dynamic> recentUplaodJson =
+            response[ApiConstants.JSON_RECENT_UPLOADS];
+        return recentUplaodJson
+            .map((json) => RecentUpload.fromJson(json))
+            .toList();
       } else {
         if (response['status'] is int) {
           return Failure(response['status'], response['message']);

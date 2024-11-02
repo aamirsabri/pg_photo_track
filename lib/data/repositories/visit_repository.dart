@@ -17,6 +17,10 @@ class VisitRepository {
     return await AppServiceClient.getAllPhotoCategories();
   }
 
+  Future<dynamic> getRecentUploads(String username) async {
+    return await AppServiceClient.getRecentUploads(username);
+  }
+
   Future<dynamic> submitVisitDetailsWithPhotos({
     required VisitDetail visitDetail,
     UserModel? user,
@@ -31,8 +35,8 @@ class VisitRepository {
       ..fields['category'] = visitDetail.selectedCategory!.name
       ..fields['visit_lat'] = visitDetail.lat.toString()
       ..fields['visit_lng'] = visitDetail.lng.toString()
-      ..fields['user_id'] = user!.userId.toString();
-
+      ..fields['user_id'] = user?.userId.toString() ?? '5300500';
+    print(request.toString());
     for (var photoDetail in photos) {
       request.files.add(
         await http.MultipartFile.fromPath(

@@ -27,6 +27,12 @@ class _CaptureReviewPhotosState extends State<CaptureReviewPhotos> {
   VisitDetailProvider? _visitDetailProvider;
 
   Future<void> _capturePhoto() async {
+    // EasyLoading.showInfo("Fetching Location...",
+    //     duration: Duration(seconds: 5));
+    // await LocationInfo.getUserLocation().then((mylocation) {
+    //   latitude = mylocation.latitude;
+    //   longitude = mylocation.longitude;
+    // });
     int count = _visitDetailProvider!.photos.length;
     EasyLoading.show();
     // Pick Image from Camera
@@ -42,11 +48,11 @@ class _CaptureReviewPhotosState extends State<CaptureReviewPhotos> {
     if (compressedPhoto == null) {
       print("error in compressing");
     } else {
-      print("main file lenght in bytes");
-      print(await photo.length());
+      // print("main file lenght in bytes");
+      // print(await photo.length());
       photo = compressedPhoto;
-      print("\ncompressed  file lenght in bytes");
-      print(await photo.length());
+      // print("\ncompressed  file lenght in bytes");
+      // print(await photo.length());
     }
 
     // Fetch Location
@@ -57,33 +63,49 @@ class _CaptureReviewPhotosState extends State<CaptureReviewPhotos> {
     //     // desiredAccuracy: LocationAccuracy.high,
     //     );
 
-    MyLocation location = await LocationInfo.getUserLocation();
-    print("lcoation complete");
-    // Extract latitude and longitude
-    latitude = location!.latitude;
-    longitude = location!.longitude;
+    // MyLocation location = await LocationInfo.getUserLocation();
+    // print("lcoation complete");
+    // // // Extract latitude and longitude
+    // latitude = location!.latitude;
+    // longitude = location!.longitude;
 
     // Save photo with details in provider
 
     _visitDetailProvider!.addPhoto(
       File(photo!.path)!,
       null,
-      latitude!,
-      longitude!,
+      latitude,
+      longitude,
     );
     EasyLoading.dismiss();
     EasyLoading.showSuccess('Photo added successfully');
     // ScaffoldMessenger.of(context).showSnackBar(
     //   SnackBar(content: Text("Photo added successfully")),
     // );
+    _visitDetailProvider!.updateLocation();
+    setState(() {});
   }
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    _visitDetailProvider =
-        Provider.of<VisitDetailProvider>(context, listen: true);
+    // _visitDetailProvider =
+    //     Provider.of<VisitDetailProvider>(context, listen: true);
+    // _visitDetailProvider!.updateLocation();
     super.didChangeDependencies();
+    ModalRoute.of(context);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _visitDetailProvider = _visitDetailProvider =
+          Provider.of<VisitDetailProvider>(context, listen: false);
+      _visitDetailProvider!.updateLocation();
+    });
   }
 
   @override
@@ -93,7 +115,7 @@ class _CaptureReviewPhotosState extends State<CaptureReviewPhotos> {
       body: Column(
         children: [
           Expanded(
-            child: (_visitDetailProvider?.photos.length == 0)
+            child: ((_visitDetailProvider?.photos.length ?? 0) == 0)
                 ? const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -140,6 +162,7 @@ class _CaptureReviewPhotosState extends State<CaptureReviewPhotos> {
                                   onPressed: () async {
                                     _visitDetailProvider!
                                         .deletePhoto(photoDetail);
+                                    setState(() {});
                                   },
                                   icon: const Icon(
                                     Icons.delete,
@@ -160,7 +183,7 @@ class _CaptureReviewPhotosState extends State<CaptureReviewPhotos> {
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: ColorManager.primary),
-                      onPressed: _visitDetailProvider!.photos.length > 0
+                      onPressed: (_visitDetailProvider?.photos.length ?? 0) > 0
                           ? () {
                               Navigator.pushNamed(context, Routes.reviewSubmit);
                             }

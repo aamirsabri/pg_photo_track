@@ -5,6 +5,7 @@ import 'package:pg_photo_track/data/providers/category_provider.dart';
 import 'package:pg_photo_track/data/providers/login_provider.dart';
 import 'package:pg_photo_track/data/providers/user_provider.dart';
 import 'package:pg_photo_track/data/providers/visit_detail_provider.dart';
+import 'package:pg_photo_track/data/repositories/recent_visit_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'presentation/route_manager.dart';
@@ -15,10 +16,10 @@ void main() {
   // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (context) => UserDetailProvider()),
       ChangeNotifierProvider(create: (context) => LoginProvider()),
       ChangeNotifierProvider(create: (context) => CategoryProvider()),
-      ChangeNotifierProvider(create: (context) => VisitDetailProvider())
+      ChangeNotifierProvider(create: (context) => VisitDetailProvider()),
+      ChangeNotifierProvider(create: (context) => RecentVisitProvider()),
     ],
     child: MyApp(),
   ));
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: getApplicationTheme(),
       debugShowCheckedModeBanner: false,
-      initialRoute: Routes.loginRoute,
+      initialRoute: Routes.homeRoute,
       onGenerateRoute: RouteGenerator.getRoute,
       builder: EasyLoading.init(),
     );

@@ -1,3 +1,7 @@
+import 'dart:ffi';
+
+import 'package:pg_photo_track/app/functions.dart';
+
 class LoginResponse {
   final String status;
   final String statusMessage;
@@ -29,6 +33,47 @@ class LoginResponse {
       userName: json['User_name'],
       locationName: json['Location_name'],
       locationCode: json['Location_code'],
+    );
+  }
+}
+
+class RecentUpload {
+  final int visitId;
+  String? visitUniqueIdentifier;
+  final String visitCategory;
+  final String date;
+  String? remark;
+  double? visitLat;
+  double? visitLng;
+  int? totalUploadedPhotos;
+
+  RecentUpload(
+      {required this.visitId,
+      required this.visitUniqueIdentifier,
+      required this.visitCategory,
+      required this.date,
+      required this.remark,
+      this.visitLat,
+      this.visitLng,
+      this.totalUploadedPhotos});
+
+  factory RecentUpload.fromJson(Map<String, dynamic> json) {
+    print("visit id " + int.parse(json['visit_id']).toString());
+    return RecentUpload(
+      visitId: int.parse(json['visit_id'].toString()),
+      visitUniqueIdentifier: json['visit_unique_indentifier'],
+      visitCategory: json['visit_category'],
+      date: json['visit_date'],
+      remark: json['remark'],
+      visitLat: json.containsKey('latitude')
+          ? convertJsonStringToDouble(json['latitude'])
+          : null,
+      visitLng: json.containsKey('longitude')
+          ? convertJsonStringToDouble(json['longitude'])
+          : null,
+      totalUploadedPhotos: json.containsKey('no_of_photos')
+          ? int.parse(json['no_of_photos'].toString())
+          : null,
     );
   }
 }

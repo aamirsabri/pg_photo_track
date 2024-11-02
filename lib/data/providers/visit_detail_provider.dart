@@ -4,22 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:pg_photo_track/app/functions.dart';
 import 'package:pg_photo_track/data/repositories/visit_repository.dart';
+import 'package:pg_photo_track/domain/mylocation.dart';
 import 'package:pg_photo_track/domain/user.dart';
 import 'package:pg_photo_track/model/photo_model.dart';
 import 'package:pg_photo_track/model/request.dart';
 import 'package:pg_photo_track/model/visit_detail.dart';
 import 'package:pg_photo_track/utils/failure.dart';
+import 'package:pg_photo_track/utils/locationinfo.dart';
 
 class VisitDetailProvider with ChangeNotifier {
   String? _errorMessage;
   String? _resultMessage;
   final VisitRepository _visitRepository;
-  final List<PhotoDetail> _photos = [];
+  List<PhotoDetail> _photos = [];
   List<Category> _categories = [];
   bool _isLoading = false;
   VisitDetail _visitDetail = VisitDetail(label: '', remarks: '');
-
-  List<PhotoDetail> get photos => List.unmodifiable(_photos);
+  MyLocation? myLocation;
+  List<PhotoDetail> get photos => List.from(_photos);
 
   VisitDetailProvider() : _visitRepository = VisitRepository();
   String? get errorMessage => _errorMessage;
@@ -40,36 +42,41 @@ class VisitDetailProvider with ChangeNotifier {
     }
   }
 
+  Future<void> updateLocation() async {
+    myLocation = await LocationInfo.getUserLocation();
+    notifyListeners();
+  }
+
   void addPhoto(
-      File photo, String? remark, double latitude, double longitude) async {
+      File photo, String? remark, double? latitude, double? longitude) async {
+    print("my location " + myLocation!.latitude.toString());
     _photos.add(
       PhotoDetail(
         photo: photo,
         date: DateTime.now(),
         remark: remark ?? '',
-        latitude: latitude,
-        longitude: longitude,
+        latitude: myLocation?.latitude,
+        longitude: myLocation?.longitude,
       ),
     );
-    print("size add phto ");
+
     print(await photo.length());
     notifyListeners();
   }
 
-  Future<void> submitVisitDetailsWithPhotos(UserModel user) async {
+  Future<void> submitVisitDetailsWithPhotos(UserModel? user) async {
     _errorMessage = null;
     _isLoading = true;
     _resultMessage = null;
-
+    print("in sumit visit");
     final result = await _visitRepository.submitVisitDetailsWithPhotos(
-      visitDetail: visitDetail,
-      photos: _photos,
-      user:user
-    );
+        visitDetail: visitDetail, photos: _photos, user: user);
     if (result is Failure) {
       _errorMessage = result.messege;
     } else {
       _photos.clear();
+      visitDetail.selectedCategory = null;
+      visitDetail.label = '';
       _resultMessage = result;
     }
     EasyLoading.dismiss();

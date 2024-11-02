@@ -6,11 +6,13 @@ class ApiConstants {
   static const String IMEI = "IMEI";
   static const String OTP = "OTP";
 
-  static const getFeeders_APIKEY = "pgvclit002001apigetfdrs--";
-  static const fetchESD_APIKEY = "pgvclit002003apifetchESD-";
-  static const APIKEY_loginOTP = "pgvclit001002apiloginotp-";
-  static const APIKEY_loginVAL = "pgvclit001001apiloginval-";
-  static const saveESD_APIKEY = "pgvclit002002apisaveESD--";
+  static const String getFeeders_APIKEY = "pgvclit002001apigetfdrs--";
+  static const String fetchESD_APIKEY = "pgvclit002003apifetchESD-";
+  static const String APIKEY_loginOTP = "pgvclit001002apiloginotp-";
+  static const String APIKEY_loginVAL = "pgvclit001001apiloginval-";
+  static const String saveESD_APIKEY = "pgvclit002002apisaveESD--";
 
-  static const APP_NO_VAL = "110";
+  static const String APP_NO_VAL = "110";
+  static const String JSON_RECENT_UPLOADS = "recent_uploads";
+  static const String JSON_USER_ID = "user_id";
 }

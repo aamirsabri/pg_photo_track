@@ -4,11 +4,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:pg_photo_track/data/providers/category_provider.dart';
 import 'package:pg_photo_track/data/providers/login_provider.dart';
 import 'package:pg_photo_track/data/providers/visit_detail_provider.dart';
+import 'package:pg_photo_track/domain/mylocation.dart';
 import 'package:pg_photo_track/presentation/color_manager.dart';
 import 'package:pg_photo_track/presentation/font_manager.dart';
 import 'package:pg_photo_track/presentation/route_manager.dart';
 import 'package:pg_photo_track/presentation/style_manager.dart';
 import 'package:pg_photo_track/presentation/widgets/label_value_widget.dart';
+import 'package:pg_photo_track/utils/locationinfo.dart';
 import 'package:provider/provider.dart';
 
 class ReviewAndSubmitScreen extends StatefulWidget {
@@ -19,29 +21,33 @@ class ReviewAndSubmitScreen extends StatefulWidget {
 class _ReviewAndSubmitScreenState extends State<ReviewAndSubmitScreen> {
   VisitDetailProvider? _visitDetailProvider;
   CategoryProvider? _categoryProvider;
-
+  LoginProvider? _loginProvider;
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     _visitDetailProvider = Provider.of<VisitDetailProvider>(context);
     _categoryProvider = Provider.of<CategoryProvider>(context);
-
+    _loginProvider = Provider.of<LoginProvider>(context, listen: false);
     super.didChangeDependencies();
   }
 
   Future<void> submitVisitDetails() async {
     EasyLoading.showInfo("Fetching Location...",
         duration: Duration(seconds: 3));
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-
+    // Position position = await Geolocator.getCurrentPosition(
+    //   desiredAccuracy: LocationAccuracy.high,
+    // );
+    MyLocation location = await LocationInfo.getUserLocation();
+    print("location " + location.latitude.toString());
     // Extract latitude and longitude
-    _visitDetailProvider!.visitDetail.lat = position.latitude;
-    _visitDetailProvider!.visitDetail.lng = position.longitude;
+    // _visitDetailProvider!.visitDetail.lat = position.latitude;
+    // _visitDetailProvider!.visitDetail.lng = position.longitude;
+    _visitDetailProvider!.visitDetail.lat = location.latitude;
+    _visitDetailProvider!.visitDetail.lng = location.longitude;
     EasyLoading.show();
-    final loginProvider = Provider.of<LoginProvider>(context,listen: false);
-    await _visitDetailProvider!.submitVisitDetailsWithPhotos(loginProvider.user);
+
+    await _visitDetailProvider!
+        .submitVisitDetailsWithPhotos(_loginProvider?.user);
     EasyLoading.dismiss();
     // longitude = position.longitude;
   }

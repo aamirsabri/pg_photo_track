@@ -49,7 +49,7 @@ class _VisitDetailScreenState extends State<VisitDetailScreen> {
                     height: 16,
                   ),
                   Text(
-                    "Visit Identifier",
+                    "Visit Identifier (Optional)",
                     style: getMediumStyle(
                         fontColor: ColorManager.primaryFontOpacity70,
                         fontSize: FontSize.mediumSize),
@@ -68,7 +68,7 @@ class _VisitDetailScreenState extends State<VisitDetailScreen> {
                   ),
                   SizedBox(height: 32),
                   Text(
-                    "Search Category",
+                    "Search Category *",
                     style: getMediumStyle(
                         fontColor: ColorManager.primaryFontOpacity70,
                         fontSize: FontSize.mediumSize),

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -141,4 +142,23 @@ String removeZeroFromNumber(double? number) {
   }
   RegExp regex = RegExp(r'([.]*0)(?!.*\d)');
   return number.toString().replaceAll(regex, '');
+}
+
+double? convertJsonStringToDouble(String? jsonString) {
+  if (jsonString == null || jsonString.isEmpty) {
+    return null; // Return null if the string is null or empty
+  }
+
+  try {
+    final decodedJson = jsonDecode(jsonString);
+    if (decodedJson is num) {
+      return decodedJson.toDouble(); // If it's a number, convert to double
+    } else if (decodedJson is String) {
+      return double.tryParse(decodedJson); // Try parsing the string to double
+    }
+  } catch (e) {
+    print('Error parsing JSON: $e');
+  }
+
+  return null; // Return null if unable to convert
 }

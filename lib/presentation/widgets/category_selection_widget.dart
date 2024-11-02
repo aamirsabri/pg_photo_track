@@ -43,9 +43,8 @@ class _CategorySelectionWidgetState extends State<CategorySelectionWidget> {
                 .setVisitCategory(null);
             setState(() {
               filteredCategories = widget.categories
-                  .where((category) => category.name
-                      .toLowerCase()
-                      .startsWith(value.toLowerCase()))
+                  .where((category) =>
+                      category.name.toLowerCase().contains(value.toLowerCase()))
                   .toList();
             });
           },

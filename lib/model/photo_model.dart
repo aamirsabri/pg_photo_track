@@ -1,11 +1,11 @@
 import 'dart:io';
 
 class PhotoDetail {
-  final File photo;
-  final String remark;
-  final DateTime date;
-  final double latitude;
-  final double longitude;
+  File photo;
+  String remark;
+  DateTime date;
+  double? latitude;
+  double? longitude;
 
   PhotoDetail({
     required this.photo,

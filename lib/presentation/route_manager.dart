@@ -4,7 +4,7 @@ import 'package:pg_photo_track/presentation/screens/auth/login.dart';
 import 'package:pg_photo_track/presentation/screens/auth/otp_screen.dart';
 import 'package:pg_photo_track/presentation/screens/capture_review_photos/capture_review_photos.dart';
 import 'package:pg_photo_track/presentation/screens/home_screen.dart';
-import 'package:pg_photo_track/presentation/screens/photos_capture_upload/capture_photo_screen.dart';
+
 import 'package:pg_photo_track/presentation/screens/visit/review_submit_screen.dart';
 import 'package:pg_photo_track/presentation/screens/visit/select_visit_category.dart';
 import 'package:pg_photo_track/presentation/screens/visit/visit_detail_screen.dart';
@@ -49,10 +49,7 @@ class RouteGenerator {
         {
           return MaterialPageRoute(builder: (_) => VisitDetailScreen());
         }
-      case Routes.capturePhoto:
-        {
-          return MaterialPageRoute(builder: (_) => CapturePhotoScreen());
-        }
+
       case Routes.reviewPhotos:
         {
           return MaterialPageRoute(builder: (_) => CaptureReviewPhotos());

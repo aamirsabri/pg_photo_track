@@ -3,7 +3,7 @@ class Constant {
   static const String baseUrl = "http://117.205.3.45:8082";
   // static const String testBaseUrl = "https://kasiri.mocklab.io";
   // static const String testBaseUrl = "https://tech.mocklab.io";
-  static const String testBaseUrl = "https://y163z.wiremockapi.cloud";
+  static const String testBaseUrl = "https://kasiri.wiremockapi.cloud";
 
   static const String getAllCategories = "/visitpic_getcategories.php";
   static const String login =
@@ -12,6 +12,7 @@ class Constant {
       "/PGVCLITAPPAPI/PGVCLITAPPAPI/ValidateOTP/OTP/";
 
   static const String uploadVisit = '/visitpic_upload_visit.php';
+  static const String getRecentUploads = "/visitpic_recent_upload_visits.php";
 
   static const String getHolidayList = "/attendance_get_holidays.php";
   static const String getDashBoardData = "/attendance_dashboard.php";

@@ -3,6 +3,7 @@ import 'package:pg_photo_track/model/request.dart';
 class VisitDetail {
   String label;
   String remarks;
+
   Category? selectedCategory;
   double? lat;
   double? lng;

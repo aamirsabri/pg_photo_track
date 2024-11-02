@@ -32,6 +32,7 @@ class LoginProvider with ChangeNotifier {
     if (deviceInfo is Failure) {
       _errorMessage = "imei number cannot be fetched";
       print('error in imei number');
+      _isLoading = false;
       return;
     }
     try {
@@ -46,6 +47,7 @@ class LoginProvider with ChangeNotifier {
       if (response is LoginResponse) {
         if (response.status == "00") {
           isLoginSuccess = true;
+          _isLoading = false;
         }
         print('username');
         print(response.userName);
@@ -66,6 +68,7 @@ class LoginProvider with ChangeNotifier {
             'user ' + _user!.userId.toString() + " " + _user!.imei.toString());
       } else if (response is Failure) {
         _errorMessage = response.messege;
+        _isLoading = false;
       }
       _isLoading = false;
       // notifyListeners();
