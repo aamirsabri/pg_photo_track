@@ -69,8 +69,13 @@ class VisitDetailProvider with ChangeNotifier {
     _isLoading = true;
     _resultMessage = null;
     print("in sumit visit");
+    visitDetail.locationDetail?.setFullAddress();
+
     final result = await _visitRepository.submitVisitDetailsWithPhotos(
-        visitDetail: visitDetail, photos: _photos, user: user);
+      visitDetail: visitDetail,
+      photos: _photos,
+      user: user,
+    );
     if (result is Failure) {
       _errorMessage = result.messege;
     } else {

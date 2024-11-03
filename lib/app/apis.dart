@@ -139,7 +139,9 @@ class AppServiceClient {
   static Future<dynamic> getRecentUploads(String username) async {
     try {
       var url = Uri.parse(Constant.baseUrl + Constant.getRecentUploads);
-      Map<String, dynamic> argument = {ApiConstants.JSON_USER_ID: "5300500"};
+      Map<String, dynamic> argument = {
+        ApiConstants.JSON_USER_ID: username ?? "5300500"
+      };
       var response = await getRawHttp(url, argument);
       if (response is Failure) {
         return response;

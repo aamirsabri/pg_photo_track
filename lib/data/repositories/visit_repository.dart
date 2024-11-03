@@ -33,9 +33,14 @@ class VisitRepository {
       ..fields['label'] = visitDetail.label ?? ''
       ..fields['remark'] = visitDetail.remarks ?? ''
       ..fields['category'] = visitDetail.selectedCategory!.name
-      ..fields['visit_lat'] = visitDetail.lat.toString()
-      ..fields['visit_lng'] = visitDetail.lng.toString()
-      ..fields['user_id'] = user?.userId.toString() ?? '5300500';
+      ..fields['visit_lat'] = visitDetail.locationDetail!.latitude.toString()
+      ..fields['visit_lng'] = visitDetail.locationDetail!.longitude.toString()
+      ..fields['user_id'] = user?.userId.toString() ?? '5300500'
+      ..fields['visit_full_address'] =
+          visitDetail.locationDetail?.fullAddress ?? ''
+      ..fields['visit_city'] = visitDetail.locationDetail?.cityName ?? ''
+      ..fields['visit_pincode'] = visitDetail.locationDetail?.pinCode ?? '';
+
     print(request.toString());
     for (var photoDetail in photos) {
       request.files.add(

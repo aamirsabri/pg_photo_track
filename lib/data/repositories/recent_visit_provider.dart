@@ -8,29 +8,40 @@ import '../repositories/visit_repository.dart';
 
 class RecentVisitProvider with ChangeNotifier {
   bool isLoading = false;
+  String? errorMessage;
+  bool hasError = false;
+
   final VisitRepository _visitRepository = VisitRepository();
   List<RecentUpload> recentUploads = [];
 
-  Future<void> loadRecentUploads() async {
+  Future<dynamic> loadRecentUploads() async {
+    recentUploads = [];
     isLoading = true;
+    errorMessage = null;
+    hasError = false;
+    notifyListeners();
     print("load started");
     String? userId =
         await AppPreference(await SharedPreferences.getInstance()).getUserId();
     try {
-      recentUploads =
+      final result =
           await _visitRepository.getRecentUploads(userId ?? "5300500");
-      if (recentUploads is Failure) {
-        recentUploads = [];
+
+      if (result is Failure) {
+        errorMessage = result.messege;
+        hasError = true;
+      } else {
+        recentUploads = result;
       }
       isLoading = false;
       //recentUploads = [];
       print("recent uploads result ");
       print(recentUploads.toString);
-      isLoading = false;
 
       notifyListeners();
     } catch (e) {
       isLoading = false;
+      hasError = false;
       print("Error fetching recent uploads: $e");
       notifyListeners();
     }

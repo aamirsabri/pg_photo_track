@@ -86,7 +86,7 @@ class _CategorySelectionWidgetState extends State<CategorySelectionWidget> {
                         style: TextStyle(
                           color: selectedCategory?.name == category.name
                               ? ColorManager.white
-                              : Colors.black,
+                              : Colors.white,
                         ),
                       )),
                 ),

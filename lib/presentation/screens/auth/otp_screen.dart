@@ -1,6 +1,8 @@
 // presentation/pages/otp_screen.dart
 import 'package:flutter/material.dart';
+import 'package:pg_photo_track/presentation/color_manager.dart';
 import 'package:pg_photo_track/presentation/screens/home_screen.dart';
+import 'package:pg_photo_track/presentation/style_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/providers/login_provider.dart';
@@ -42,8 +44,8 @@ class _OtpScreenState extends State<OtpScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              "Please enter the 6-digit OTP sent to your mobile number.",
+            Text(
+              loginProvider.successMessage.toString(),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 20),
@@ -61,7 +63,10 @@ class _OtpScreenState extends State<OtpScreen> {
                 ? const CircularProgressIndicator()
                 : ElevatedButton(
                     onPressed: _submitOtp,
-                    child: const Text("Submit OTP"),
+                    child: Text(
+                      "Submit OTP",
+                      style: getRegularStyle(fontColor: ColorManager.white),
+                    ),
                   ),
           ],
         ),

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:geolocator/geolocator.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:pg_photo_track/data/providers/visit_detail_provider.dart';
 import 'package:pg_photo_track/domain/mylocation.dart';

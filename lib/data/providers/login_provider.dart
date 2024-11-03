@@ -3,6 +3,7 @@ import 'package:pg_photo_track/app/api_constants.dart';
 import 'package:pg_photo_track/app/app_pref.dart';
 import 'package:pg_photo_track/domain/user.dart';
 import 'package:pg_photo_track/model/response.dart';
+import 'package:pg_photo_track/presentation/route_manager.dart';
 import 'package:pg_photo_track/utils/error_handling.dart';
 import 'package:pg_photo_track/utils/failure.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,10 +23,17 @@ class LoginProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   UserModel? get user => _user;
-  Future<dynamic> loginUser(String username, String password) async {
-    isLoginSuccess = false;
-    _isLoading = true;
+  String? successMessage;
+  void resetFlags() {
+    _isLoading = false;
+    isOTPSuccess = false;
     _errorMessage = null;
+    isLoginSuccess = false;
+    successMessage = null;
+  }
+
+  Future<dynamic> loginUser(String username, String password) async {
+    resetFlags();
     // notifyListeners();
     dynamic deviceInfo = await DeviceInfo.getUniqueDeviceId();
     print('device info ' + deviceInfo.toString());
@@ -47,8 +55,11 @@ class LoginProvider with ChangeNotifier {
       if (response is LoginResponse) {
         if (response.status == "00") {
           isLoginSuccess = true;
-          _isLoading = false;
+        } else if (response.status == "04") {
+          isOTPSuccess = true;
+          successMessage = response.statusMessage;
         }
+        _isLoading = false;
         print('username');
         print(response.userName);
         _user = UserModel(
@@ -78,6 +89,11 @@ class LoginProvider with ChangeNotifier {
       _isLoading = false;
       // notifyListeners();
     }
+  }
+
+  Future<void> logOut(BuildContext context) async {
+    await AppPreference(await SharedPreferences.getInstance()).setUserId('');
+    Navigator.pushNamed(context, Routes.loginRoute);
   }
 
   Future<bool> submitOtp(String otp) async {

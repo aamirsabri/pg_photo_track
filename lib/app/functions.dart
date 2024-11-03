@@ -84,6 +84,7 @@ String getFormattedTimeFromDateTime(DateTime date) {
 
 getDateFromString(String date, String format) {
   DateTime newDate = new DateFormat(format).parse(date);
+
   return DateTime.utc(
       newDate.year, newDate.month, newDate.day, newDate.hour, newDate.minute);
 }

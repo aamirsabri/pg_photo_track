@@ -61,7 +61,7 @@ class RecentUpload {
     print("visit id " + int.parse(json['visit_id']).toString());
     return RecentUpload(
       visitId: int.parse(json['visit_id'].toString()),
-      visitUniqueIdentifier: json['visit_unique_indentifier'],
+      visitUniqueIdentifier: json['visit_unique_identifier'].toString(),
       visitCategory: json['visit_category'],
       date: json['visit_date'],
       remark: json['remark'],
