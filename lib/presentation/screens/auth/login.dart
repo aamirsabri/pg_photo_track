@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:pg_photo_track/data/providers/login_provider.dart';
+import 'package:pg_photo_track/presentation/color_manager.dart';
+import 'package:pg_photo_track/presentation/font_manager.dart';
 
 import 'package:pg_photo_track/presentation/route_manager.dart';
 
@@ -58,8 +60,34 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                buildIconWithLabel(
-                    'Login to IT Applications', 'assets/images/pgvclicon.jpg'),
+                // buildIconWithLabel(
+                //     'Login to IT Applications', 'assets/images/pgvclicon.jpg'),
+                // SizedBox(
+                //   width: 100,
+                // ),
+                Container(
+                  margin: EdgeInsets.only(top: 150),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/images/pgvclicon.jpg',
+                        width: 75,
+                        height: 75,
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Text('FIELD PHOTO PGVCL',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: ColorManager.primary,
+                              fontSize: 21,
+                              fontFamily: 'nova')),
+                    ],
+                  ),
+                ),
+
                 const SizedBox(height: AppSize.s60),
                 CustomTextFormField(
                   controller: _userIdController,
@@ -86,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             _userIdController.text, _passwordController.text);
                         EasyLoading.dismiss();
                         if (_loginProvider!.isLoginSuccess == true) {
-                          Navigator.pushNamed(context, Routes.homeRoute);
+                          Navigator.pushNamed(context, Routes.visetDetail);
                         } else if (_loginProvider!.errorMessage == null) {
                           Navigator.pushNamed(context, Routes.otpRoute);
                         }

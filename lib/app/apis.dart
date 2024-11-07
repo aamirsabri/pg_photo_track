@@ -1,4 +1,4 @@
-import 'dart:ffi';
+import 'dart:typed_data';
 
 import 'package:pg_photo_track/app/api_constants.dart';
 import 'package:pg_photo_track/app/constants.dart';
@@ -133,6 +133,24 @@ class AppServiceClient {
       }
     } catch (e) {
       return Failure(ResponseCode.UNKNOWN, ResponseMessage.UNKNOWN);
+    }
+  }
+
+  static Future<dynamic> fetchImage(String visitId) async {
+    final response = await http.post(
+      Uri.parse(Constant.baseUrl + Constant.viewPhoto),
+      headers: {'Content-Type': 'application/json'},
+      body: '{"visit_id": $visitId}',
+    );
+    Uint8List? imageBytes;
+
+    if (response.statusCode == 200) {
+      print("respons body " + response.bodyBytes.length.toString());
+      imageBytes = response.bodyBytes;
+      return imageBytes;
+      print("image bytes body " + response.bodyBytes.length.toString());
+    } else {
+      print('Failed to load image');
     }
   }
 

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:pg_photo_track/presentation/color_manager.dart';
 import 'package:pg_photo_track/presentation/screens/home_screen.dart';
+import 'package:pg_photo_track/presentation/screens/visit/visit_detail_screen.dart';
 import 'package:pg_photo_track/presentation/style_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +24,7 @@ class _OtpScreenState extends State<OtpScreen> {
       // OTP is valid, navigate to HomeScreen
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => VisitDetailScreen()),
       );
     } else {
       // Show error message

@@ -5,6 +5,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:pg_photo_track/app/functions.dart';
 import 'package:pg_photo_track/data/providers/login_provider.dart';
 import 'package:pg_photo_track/data/repositories/recent_visit_provider.dart';
+import 'package:pg_photo_track/model/request.dart';
 import 'package:pg_photo_track/model/response.dart';
 import 'package:pg_photo_track/presentation/color_manager.dart';
 import 'package:pg_photo_track/presentation/font_manager.dart';
@@ -140,16 +141,14 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }
             return RecentUploadList(
-                recentUploads: recentVisitProvider.recentUploads);
+              recentUploads: recentVisitProvider.recentUploads,
+            );
           }),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: (recentVisitProvider.isLoading ||
-                  recentVisitProvider?.errorMessage != null)
-              ? null
-              : () async {
-                  Navigator.pushNamed(context, Routes.visetDetail);
-                },
+          onPressed: () async {
+            Navigator.pushNamed(context, Routes.visetDetail);
+          },
           tooltip: 'Add',
           child: Icon(
             Icons.add,
@@ -168,7 +167,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class RecentUploadList extends StatelessWidget {
   List<RecentUpload> recentUploads;
-  RecentUploadList({required this.recentUploads});
+  Category? lastCatgory;
+  RecentUploadList({
+    required this.recentUploads,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +178,54 @@ class RecentUploadList extends StatelessWidget {
     return ListView.builder(
         itemCount: recentUploads.length,
         itemBuilder: (context, index) {
-          return RecentUploadCard(visit: recentUploads[index]);
+          final lastCat = recentUploads[index].visitCategory;
+          if (index > 1) {
+            if (lastCat != recentUploads[index - 1].visitCategory) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Divider(),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                    lastCat,
+                    style: getMediumStyle(
+                        fontColor: ColorManager.darkgrey,
+                        fontSize: FontSize.mediumLargeSize),
+                  ),
+                  RecentUploadCard(
+                    visit: recentUploads[index],
+                  ),
+                ],
+              );
+            }
+          }
+          if (index == 0) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 8,
+                ),
+                Text(
+                  lastCat,
+                  style: getMediumStyle(
+                      fontColor: ColorManager.darkgrey,
+                      fontSize: FontSize.mediumLargeSize),
+                ),
+                RecentUploadCard(
+                  visit: recentUploads[index],
+                ),
+              ],
+            );
+          }
+          return RecentUploadCard(
+            visit: recentUploads[index],
+          );
         });
   }
 }

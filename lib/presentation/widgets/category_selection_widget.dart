@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pg_photo_track/data/providers/visit_detail_provider.dart';
 import 'package:pg_photo_track/model/request.dart';
 import 'package:pg_photo_track/presentation/color_manager.dart';
+import 'package:pg_photo_track/presentation/font_manager.dart';
 import 'package:provider/provider.dart';
 
 class CategorySelectionWidget extends StatefulWidget {
@@ -49,7 +50,7 @@ class _CategorySelectionWidgetState extends State<CategorySelectionWidget> {
             });
           },
           decoration: const InputDecoration(
-            hintText: 'Search Category',
+            hintText: 'type to search Purpose',
             suffixIcon: Icon(Icons.search),
           ),
         ),
@@ -68,6 +69,9 @@ class _CategorySelectionWidgetState extends State<CategorySelectionWidget> {
         //   },
         //   value: filteredCategories.isNotEmpty ? filteredCategories[0] : null,
         // ),
+        const SizedBox(
+          height: 8,
+        ),
         Wrap(
           children: filteredCategories.map((Category category) {
             return GestureDetector(
@@ -84,10 +88,10 @@ class _CategorySelectionWidgetState extends State<CategorySelectionWidget> {
                       child: Text(
                         category.name,
                         style: TextStyle(
-                          color: selectedCategory?.name == category.name
-                              ? ColorManager.white
-                              : Colors.white,
-                        ),
+                            color: selectedCategory?.name == category.name
+                                ? ColorManager.white
+                                : Colors.white,
+                            fontSize: FontSize.mediumLargeSize),
                       )),
                 ),
                 onTap: () {

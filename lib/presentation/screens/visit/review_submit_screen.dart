@@ -19,6 +19,7 @@ class ReviewAndSubmitScreen extends StatefulWidget {
 }
 
 class _ReviewAndSubmitScreenState extends State<ReviewAndSubmitScreen> {
+  TextEditingController _remarkController = TextEditingController();
   VisitDetailProvider? _visitDetailProvider;
   CategoryProvider? _categoryProvider;
   LoginProvider? _loginProvider;
@@ -28,6 +29,7 @@ class _ReviewAndSubmitScreenState extends State<ReviewAndSubmitScreen> {
     _visitDetailProvider = Provider.of<VisitDetailProvider>(context);
     _categoryProvider = Provider.of<CategoryProvider>(context);
     _loginProvider = Provider.of<LoginProvider>(context, listen: false);
+    _remarkController.text = _visitDetailProvider?.visitDetail?.remarks ?? '';
     super.didChangeDependencies();
   }
 
@@ -38,7 +40,10 @@ class _ReviewAndSubmitScreenState extends State<ReviewAndSubmitScreen> {
     //   desiredAccuracy: LocationAccuracy.high,
     // );
     MyLocation location = await LocationInfo.getUserLocation();
-    //print("location " + location.latitude.toString());
+    await location.setFullAddress();
+    await location.setCityName();
+    await location.setPinCode();
+    print("location address" + location.fullAddress.toString());
     // Extract latitude and longitude
     // _visitDetailProvider!.visitDetail.lat = position.latitude;
     // _visitDetailProvider!.visitDetail.lng = position.longitude;
@@ -48,6 +53,7 @@ class _ReviewAndSubmitScreenState extends State<ReviewAndSubmitScreen> {
 
     await _visitDetailProvider!
         .submitVisitDetailsWithPhotos(_loginProvider?.user);
+
     EasyLoading.dismiss();
     // longitude = position.longitude;
   }
@@ -63,24 +69,37 @@ class _ReviewAndSubmitScreenState extends State<ReviewAndSubmitScreen> {
               child: ListView(
                 // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Visit Details",
+                  const Text(
+                    "Field Visit Detail",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   LabelValueWidget(
-                    label: "Unique Identifier",
+                    label: "Photo Location Detail",
                     value: _visitDetailProvider!.visitDetail.label,
                   ),
                   LabelValueWidget(
-                    label: "No of Photos",
-                    value: _visitDetailProvider!.photos.length.toString(),
-                  ),
-                  LabelValueWidget(
-                    label: "Category",
+                    label: "Purpose",
                     value: _visitDetailProvider!
                             .visitDetail.selectedCategory?.name ??
                         '',
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text(
+                    "Captured Photo",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  Container(
+                    margin: EdgeInsets.all(8),
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: Image.file(_visitDetailProvider!.photos[0].photo,
+                        fit: BoxFit.cover),
                   ),
                   const SizedBox(
                     height: 20,
@@ -89,15 +108,24 @@ class _ReviewAndSubmitScreenState extends State<ReviewAndSubmitScreen> {
                     "Remark",
                     style: getMediumStyle(
                         fontColor: ColorManager.primaryFontOpacity70,
-                        fontSize: FontSize.regularSize),
+                        fontSize: FontSize.mediumSize),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: TextField(
+                      style: getMediumStyle(
+                          fontColor: ColorManager.darkgrey,
+                          fontSize: FontSize.mediumLargeSize,
+                          fontWeight: FontWeight.bold),
+                      controller: _remarkController,
                       keyboardType: TextInputType.multiline,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
                         hintText: 'Enter Remark',
+                        hintStyle: getMediumStyle(
+                            fontColor: ColorManager.darkgrey,
+                            fontSize: FontSize.mediumLargeSize,
+                            fontWeight: FontWeight.bold),
                       ),
                       minLines: 3,
                       maxLines: 3,

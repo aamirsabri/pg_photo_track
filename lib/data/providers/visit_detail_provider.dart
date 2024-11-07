@@ -22,6 +22,7 @@ class VisitDetailProvider with ChangeNotifier {
   VisitDetail _visitDetail = VisitDetail(label: '', remarks: '');
   MyLocation? myLocation;
   List<PhotoDetail> get photos => List.from(_photos);
+  Category? defaultCategory;
 
   VisitDetailProvider() : _visitRepository = VisitRepository();
   String? get errorMessage => _errorMessage;
@@ -29,6 +30,10 @@ class VisitDetailProvider with ChangeNotifier {
   List<Category> get categories => _categories;
   bool get isLoading => _isLoading;
   VisitDetail get visitDetail => _visitDetail;
+
+  void setLoading(bool value) {
+    _isLoading = value;
+  }
 
   void deletePhoto(PhotoDetail photoDetail) {
     int index = 0;
@@ -50,15 +55,24 @@ class VisitDetailProvider with ChangeNotifier {
   void addPhoto(
       File photo, String? remark, double? latitude, double? longitude) async {
     print("my location " + myLocation!.latitude.toString());
+    _photos.clear();
     _photos.add(
       PhotoDetail(
-        photo: photo,
-        date: DateTime.now(),
-        remark: remark ?? '',
-        latitude: myLocation?.latitude,
-        longitude: myLocation?.longitude,
-      ),
+          photo: photo,
+          date: DateTime.now(),
+          remark: remark ?? '',
+          latitude: myLocation?.latitude,
+          longitude: myLocation?.longitude,
+          category: defaultCategory),
     );
+
+    // _photos[0] = PhotoDetail(
+    //     photo: photo,
+    //     date: DateTime.now(),
+    //     remark: remark ?? '',
+    //     latitude: myLocation?.latitude,
+    //     longitude: myLocation?.longitude,
+    //     category: defaultCategory);
 
     print(await photo.length());
     notifyListeners();
@@ -81,6 +95,7 @@ class VisitDetailProvider with ChangeNotifier {
     } else {
       _photos.clear();
       visitDetail.selectedCategory = null;
+      defaultCategory = null;
       visitDetail.label = '';
       _resultMessage = result;
     }
@@ -104,11 +119,17 @@ class VisitDetailProvider with ChangeNotifier {
 
   void setVisitCategory(Category? category) {
     _visitDetail.selectedCategory = category;
+    defaultCategory = null;
     notifyListeners();
   }
 
   void setVisitLabel(String label) {
     _visitDetail.label = label;
+    notifyListeners();
+  }
+
+  void setDefaultCategory(Category? category) {
+    defaultCategory = category;
     notifyListeners();
   }
 
@@ -118,6 +139,6 @@ class VisitDetailProvider with ChangeNotifier {
   }
 
   bool isFormValid() {
-    return _visitDetail.selectedCategory != null;
+    return defaultCategory != null;
   }
 }

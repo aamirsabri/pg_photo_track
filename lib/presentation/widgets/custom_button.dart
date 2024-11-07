@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pg_photo_track/presentation/color_manager.dart';
+import 'package:pg_photo_track/presentation/font_manager.dart';
 
 class CustomButton extends StatelessWidget {
   final String label;
@@ -26,8 +27,9 @@ class CustomButton extends StatelessWidget {
                 label,
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    letterSpacing: 4,
-                    color: ColorManager.white),
+                    letterSpacing: 2,
+                    color: ColorManager.white,
+                    fontSize: FontSize.mediumLargeSize),
               ),
             ],
           ),

@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: getApplicationTheme(),
       debugShowCheckedModeBanner: false,
-      initialRoute: Routes.homeRoute,
+      initialRoute: Routes.loginRoute,
       onGenerateRoute: RouteGenerator.getRoute,
       builder: EasyLoading.init(),
     );

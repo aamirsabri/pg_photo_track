@@ -4,6 +4,7 @@ import 'package:pg_photo_track/model/request.dart';
 import 'package:pg_photo_track/presentation/color_manager.dart';
 import 'package:pg_photo_track/presentation/font_manager.dart';
 import 'package:pg_photo_track/presentation/route_manager.dart';
+import 'package:pg_photo_track/presentation/screens/visit/photo_detail_screen.dart';
 import 'package:pg_photo_track/presentation/style_manager.dart';
 import 'package:pg_photo_track/presentation/widgets/category_selection_widget.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +28,8 @@ class _VisitDetailScreenState extends State<VisitDetailScreen> {
   void onCategorySelected(Category selectedCategory) {
     final visitDetailProvider =
         Provider.of<VisitDetailProvider>(context, listen: false);
-    visitDetailProvider.setVisitCategory(selectedCategory);
+    visitDetailProvider.setDefaultCategory(selectedCategory);
+    visitDetailProvider.visitDetail.selectedCategory = selectedCategory;
   }
 
   @override
@@ -35,7 +37,12 @@ class _VisitDetailScreenState extends State<VisitDetailScreen> {
     final visitDetailProvider = Provider.of<VisitDetailProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Visit Details")),
+      appBar: AppBar(
+          title: Text(
+        "Visit Details",
+        style: getMediumStyle(
+            fontColor: ColorManager.white, fontSize: FontSize.mediumLargeSize),
+      )),
       body: visitDetailProvider.isLoading
           ? Center(child: CircularProgressIndicator())
           : Padding(
@@ -45,82 +52,65 @@ class _VisitDetailScreenState extends State<VisitDetailScreen> {
                 // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Dropdown for category selection
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
-                  Text(
-                    "Visit Identifier (Optional)",
-                    style: getMediumStyle(
-                        fontColor: ColorManager.primaryFontOpacity70,
-                        fontSize: FontSize.mediumSize),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Select Purpose',
+                        style: getMediumStyle(
+                            fontColor: ColorManager.primaryFont,
+                            fontSize: FontSize.bigSize),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    height: 4,
-                  ),
-
-                  TextField(
-                    decoration: InputDecoration(
-                        labelText:
-                            "SR No, Consumer No, Feeder No etc.. if any"),
-                    onChanged: (value) {
-                      visitDetailProvider.setVisitLabel(value);
-                    },
-                  ),
-                  SizedBox(height: 32),
-                  Text(
-                    "Search Category *",
-                    style: getMediumStyle(
-                        fontColor: ColorManager.primaryFontOpacity70,
-                        fontSize: FontSize.mediumSize),
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
+                  // Text(
+                  //   "Visit Identifier (Optional)",
+                  //   style: getMediumStyle(
+                  //       fontColor: ColorManager.primaryFontOpacity70,
+                  //       fontSize: FontSize.mediumSize),
+                  // ),
+                  // SizedBox(
+                  //   height: 4,
+                  // ),
 
                   // TextField(
-                  //   decoration:
-                  //       InputDecoration(labelText: "Type category name"),
+                  //   decoration: InputDecoration(
+                  //       labelText:
+                  //           "SR No, Consumer No, Feeder No etc.. if any"),
                   //   onChanged: (value) {
                   //     visitDetailProvider.setVisitLabel(value);
                   //   },
                   // ),
+                  // SizedBox(height: 32),
+                  // Text(
+                  //   "Remark",
+                  //   style: getMediumStyle(
+                  //       fontColor: ColorManager.primaryFontOpacity70,
+                  //       fontSize: FontSize.regularSize),
+                  // ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 8),
+                  //   child: TextField(
+                  //     keyboardType: TextInputType.multiline,
+                  //     decoration: const InputDecoration(
+                  //       border: OutlineInputBorder(),
+                  //       hintText: 'Enter Remark',
+                  //     ),
+                  //     minLines: 3,
+                  //     maxLines: 3,
+                  //     onChanged: (value) {
+                  //       visitDetailProvider.visitDetail.setRemarkd(value);
+                  //     },
+                  //   ),
+                  // ),
+
+                  SizedBox(height: 24),
                   CategorySelectionWidget(
-                      categories: visitDetailProvider.categories,
+                      categories: visitDetailProvider!.categories,
                       onCategorySelected: onCategorySelected),
-
-                  // DropdownButton<Category>(
-                  //   isExpanded: true,
-                  //   value: visitDetailProvider.visitDetail.selectedCategory,
-                  //   hint: Text("Select a category"),
-                  //   items:
-                  //       visitDetailProvider.categories.map((Category category) {
-                  //     return DropdownMenuItem<Category>(
-                  //       value: category,
-                  //       child: Text(category.name),
-                  //     );
-                  //   }).toList(),
-                  //   onChanged: (Category? newValue) {
-                  //     visitDetailProvider.setVisitCategory(newValue);
-                  //   },
-                  // ),
-
-                  // Wrap(
-                  //   children:
-                  //       visitDetailProvider.categories.map((Category category) {
-                  //     return Padding(
-                  //       padding: EdgeInsets.all(8),
-                  //       child: Container(
-                  //           padding: EdgeInsets.all(8),
-                  //           decoration: BoxDecoration(
-                  //             borderRadius: BorderRadius.circular(8),
-                  //             color: ColorManager.primary,
-                  //           ),
-                  //           child: Text(category.name)),
-                  //     );
-                  //   }).toList(),
-                  // ),
-                  SizedBox(height: 16),
-
                   // TextField for visit label
 
                   // TextField for visit remarks
@@ -131,7 +121,7 @@ class _VisitDetailScreenState extends State<VisitDetailScreen> {
                   //     visitDetailProvider.setVisitRemarks(value);
                   //   },
                   // ),
-                  Spacer(),
+                  // Spacer(),
 
                   // Submit button
                 ],
@@ -142,13 +132,17 @@ class _VisitDetailScreenState extends State<VisitDetailScreen> {
           onPressed: visitDetailProvider.isFormValid()
               ? () {
                   // Proceed to next screen (e.g., photo capture)
-                  Navigator.pushNamed(context, Routes.reviewPhotos);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return PhotoDetailScreen(
+                        category: visitDetailProvider!.defaultCategory!);
+                  }));
                 }
               : null,
           child: Text(
-            "Next",
+            "Next - Add Photo Detail",
             style: getMediumStyle(
-                fontColor: ColorManager.white, fontSize: FontSize.mediumSize),
+                fontColor: ColorManager.white,
+                fontSize: FontSize.mediumLargeSize),
           ),
         ),
       ),

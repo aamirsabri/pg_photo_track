@@ -18,13 +18,13 @@ class LabelValueWidget extends StatelessWidget {
             label!,
             style: getMediumStyle(
                 fontColor: ColorManager.primaryFontOpacity70,
-                fontSize: FontSize.regularSize),
+                fontSize: FontSize.mediumSize),
           ),
           Text(
             value == '' ? 'N/A' : value ?? 'N/A',
             style: getMediumStyle(
                 fontColor: ColorManager.primaryFont,
-                fontSize: FontSize.mediumSize),
+                fontSize: FontSize.mediumLargeSize),
           ),
         ],
       ),

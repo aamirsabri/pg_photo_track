@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pg_photo_track/model/request.dart';
 import 'package:pg_photo_track/presentation/screens/auth/login.dart';
 import 'package:pg_photo_track/presentation/screens/auth/otp_screen.dart';
+import 'package:pg_photo_track/presentation/screens/capture_review_photos/capture_photo_screen.dart';
 import 'package:pg_photo_track/presentation/screens/capture_review_photos/capture_review_photos.dart';
 import 'package:pg_photo_track/presentation/screens/home_screen.dart';
 
@@ -23,6 +24,8 @@ class Routes {
   static const String visetDetail = "/visitDetail";
   static const String reviewPhotos = "/reviewPhotos";
   static const String capturePhoto = "/capturePhotoScreen";
+  static const String takePhoto = "/takePhoto";
+  static const String photoDetail = "/photoDetail";
   static const String reviewSubmit = "/submit";
 }
 
@@ -41,10 +44,10 @@ class RouteGenerator {
         {
           return MaterialPageRoute(builder: (_) => OtpScreen());
         }
-      case Routes.selectCategory:
-        {
-          return MaterialPageRoute(builder: (_) => SelectVisitCategoryScreen());
-        }
+      // case Routes.selectCategory:
+      //   {
+      //     return MaterialPageRoute(builder: (_) => SelectVisitCategoryScreen());
+      //   }
       case Routes.visetDetail:
         {
           return MaterialPageRoute(builder: (_) => VisitDetailScreen());
@@ -57,6 +60,10 @@ class RouteGenerator {
       case Routes.reviewSubmit:
         {
           return MaterialPageRoute(builder: (_) => ReviewAndSubmitScreen());
+        }
+      case Routes.takePhoto:
+        {
+          return MaterialPageRoute(builder: (_) => CapturePhotoScreen());
         }
 
       default:

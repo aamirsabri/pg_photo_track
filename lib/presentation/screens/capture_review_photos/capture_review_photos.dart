@@ -6,11 +6,14 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pg_photo_track/data/providers/visit_detail_provider.dart';
 import 'package:pg_photo_track/domain/mylocation.dart';
+import 'package:pg_photo_track/model/request.dart';
 import 'package:pg_photo_track/presentation/color_manager.dart';
 import 'package:pg_photo_track/presentation/font_manager.dart';
 import 'package:pg_photo_track/presentation/route_manager.dart';
+import 'package:pg_photo_track/presentation/screens/visit/select_visit_category.dart';
 import 'package:pg_photo_track/presentation/string_manager.dart';
 import 'package:pg_photo_track/presentation/style_manager.dart';
+import 'package:pg_photo_track/presentation/widgets/custom_button.dart';
 import 'package:pg_photo_track/utils/image_compress.dart';
 import 'package:pg_photo_track/utils/locationinfo.dart';
 import 'package:provider/provider.dart';
@@ -26,20 +29,21 @@ class _CaptureReviewPhotosState extends State<CaptureReviewPhotos> {
 
   VisitDetailProvider? _visitDetailProvider;
 
-  Future<void> _capturePhoto() async {
+  Future<bool> _capturePhoto() async {
     // EasyLoading.showInfo("Fetching Location...",
     //     duration: Duration(seconds: 5));
     // await LocationInfo.getUserLocation().then((mylocation) {
     //   latitude = mylocation.latitude;
     //   longitude = mylocation.longitude;
     // });
+    _visitDetailProvider!.setLoading(true);
     int count = _visitDetailProvider!.photos.length;
     EasyLoading.show();
     // Pick Image from Camera
     XFile? photo = await _picker.pickImage(source: ImageSource.camera);
     if (photo == null) {
       EasyLoading.dismiss();
-      return;
+      return false;
     }
     EasyLoading.showInfo("Compressing Image...",
         duration: Duration(seconds: 5));
@@ -83,7 +87,9 @@ class _CaptureReviewPhotosState extends State<CaptureReviewPhotos> {
     //   SnackBar(content: Text("Photo added successfully")),
     // );
     _visitDetailProvider!.updateLocation();
+    _visitDetailProvider!.setLoading(false);
     setState(() {});
+    return true;
   }
 
   @override
@@ -153,9 +159,40 @@ class _CaptureReviewPhotosState extends State<CaptureReviewPhotos> {
                                 fit: BoxFit.fill,
                               ),
                               Expanded(
-                                child: Text(
-                                  "Remark: ${photoDetail.remark}\nLat: ${photoDetail.latitude}\nLng: ${photoDetail.longitude}",
-                                  textAlign: TextAlign.center,
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      "Lat: ${photoDetail.latitude}\nLng: ${photoDetail.longitude}",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    GestureDetector(
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                            color: ColorManager.primary,
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        child: Text(
+                                          photoDetail.category?.name ?? 'Other',
+                                          style: getRegularStyle(
+                                              fontColor: ColorManager.white),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return SelectVisitCategoryScreen(
+                                            category: photoDetail.category!,
+                                          );
+                                        }));
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ),
                               IconButton(
@@ -212,7 +249,11 @@ class _CaptureReviewPhotosState extends State<CaptureReviewPhotos> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: ColorManager.primary),
                       onPressed: () async {
-                        await _capturePhoto();
+                        final isPhotoCaptured = await _capturePhoto();
+                        // if (isPhotoCaptured) {
+                        //   await Navigator.pushNamed(
+                        //       context, Routes.selectCategory);
+                        // }
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(4.0),

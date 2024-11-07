@@ -21,6 +21,12 @@ class VisitRepository {
     return await AppServiceClient.getRecentUploads(username);
   }
 
+  Future<dynamic> getImageFromVisitId(int visitId) async {
+    final result = await AppServiceClient.fetchImage(visitId.toString());
+    print("repository result " + result.toString());
+    return result;
+  }
+
   Future<dynamic> submitVisitDetailsWithPhotos({
     required VisitDetail visitDetail,
     UserModel? user,
@@ -37,9 +43,11 @@ class VisitRepository {
       ..fields['visit_lng'] = visitDetail.locationDetail!.longitude.toString()
       ..fields['user_id'] = user?.userId.toString() ?? '5300500'
       ..fields['visit_full_address'] =
-          visitDetail.locationDetail?.fullAddress ?? ''
-      ..fields['visit_city'] = visitDetail.locationDetail?.cityName ?? ''
-      ..fields['visit_pincode'] = visitDetail.locationDetail?.pinCode ?? '';
+          visitDetail.locationDetail?.fullAddress ?? 'NOT AVAILABLE'
+      ..fields['visit_city'] =
+          visitDetail.locationDetail?.cityName ?? 'NOT AVAILABLE'
+      ..fields['visit_pincode'] =
+          visitDetail.locationDetail?.pinCode ?? 'NOT AVAILABLE';
 
     print(request.toString());
     for (var photoDetail in photos) {

@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:pg_photo_track/data/providers/category_provider.dart';
+import 'package:pg_photo_track/data/providers/visit_detail_provider.dart';
 import 'package:pg_photo_track/model/request.dart';
+import 'package:pg_photo_track/presentation/widgets/category_selection_widget.dart';
 import 'package:provider/provider.dart';
 
 class SelectVisitCategoryScreen extends StatefulWidget {
+  Category category;
+  SelectVisitCategoryScreen({super.key, required this.category});
+
   @override
   _SelectVisitCategoryScreenState createState() =>
       _SelectVisitCategoryScreenState();
 }
 
 class _SelectVisitCategoryScreenState extends State<SelectVisitCategoryScreen> {
+  VisitDetailProvider? visitDetailProvider;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final categoryProvider =
-          Provider.of<CategoryProvider>(context, listen: false);
-      categoryProvider.fetchCategories();
+      visitDetailProvider =
+          Provider.of<VisitDetailProvider>(context, listen: false);
+      visitDetailProvider?.fetchCategories();
     });
   }
 
@@ -29,13 +35,20 @@ class _SelectVisitCategoryScreenState extends State<SelectVisitCategoryScreen> {
     super.didChangeDependencies();
   }
 
+  void onCategorySelected(Category selectedCategory) {
+    print('selected category ' + selectedCategory.name);
+    final visitDetailProvider =
+        Provider.of<VisitDetailProvider>(context, listen: false);
+    visitDetailProvider.photos.last.category = selectedCategory;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final categoryProvider = Provider.of<CategoryProvider>(context);
+    final visitDetailProvider = Provider.of<VisitDetailProvider>(context);
 
     return Scaffold(
       appBar: AppBar(title: Text("Select Visit Category")),
-      body: categoryProvider.isLoading
+      body: visitDetailProvider.isLoading
           ? Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),
@@ -57,22 +70,12 @@ class _SelectVisitCategoryScreenState extends State<SelectVisitCategoryScreen> {
                   //     categoryProvider.selectCategory(newValue);
                   //   },
                   // ),
-                  Wrap(
-                    children:
-                        categoryProvider.categories.map((Category category) {
-                      return Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Text(category.name),
-                      );
-                    }).toList(),
-                  ),
+                  CategorySelectionWidget(
+                      categories: visitDetailProvider!.categories,
+                      onCategorySelected: onCategorySelected),
                   SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: categoryProvider.selectedCategory != null
-                        ? () {
-                            // Navigate to the next screen
-                          }
-                        : null,
+                    onPressed: () {},
                     child: Text("Next1"),
                   ),
                 ],

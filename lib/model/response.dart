@@ -46,6 +46,8 @@ class RecentUpload {
   double? visitLat;
   double? visitLng;
   int? totalUploadedPhotos;
+  String? city;
+  String? pinCode;
 
   RecentUpload(
       {required this.visitId,
@@ -55,7 +57,9 @@ class RecentUpload {
       required this.remark,
       this.visitLat,
       this.visitLng,
-      this.totalUploadedPhotos});
+      this.totalUploadedPhotos,
+      this.city,
+      this.pinCode});
 
   factory RecentUpload.fromJson(Map<String, dynamic> json) {
     print("visit id " + int.parse(json['visit_id']).toString());
@@ -73,6 +77,11 @@ class RecentUpload {
           : null,
       totalUploadedPhotos: json.containsKey('no_of_photos')
           ? int.parse(json['no_of_photos'].toString())
+          : null,
+      city:
+          json.containsKey('visit_city') ? json['visit_city'].toString() : null,
+      pinCode: json.containsKey('visit_city')
+          ? json['visit_pincode'].toString()
           : null,
     );
   }
