@@ -5,6 +5,7 @@ import 'package:pg_photo_track/presentation/screens/auth/otp_screen.dart';
 import 'package:pg_photo_track/presentation/screens/capture_review_photos/capture_photo_screen.dart';
 import 'package:pg_photo_track/presentation/screens/capture_review_photos/capture_review_photos.dart';
 import 'package:pg_photo_track/presentation/screens/home_screen.dart';
+import 'package:pg_photo_track/presentation/screens/recent_photos/view_photos.dart';
 
 import 'package:pg_photo_track/presentation/screens/visit/review_submit_screen.dart';
 import 'package:pg_photo_track/presentation/screens/visit/select_visit_category.dart';
@@ -27,6 +28,7 @@ class Routes {
   static const String takePhoto = "/takePhoto";
   static const String photoDetail = "/photoDetail";
   static const String reviewSubmit = "/submit";
+  static const String viewPhotos = "/viewPhotos";
 }
 
 class RouteGenerator {
@@ -64,6 +66,10 @@ class RouteGenerator {
       case Routes.takePhoto:
         {
           return MaterialPageRoute(builder: (_) => CapturePhotoScreen());
+        }
+      case Routes.viewPhotos:
+        {
+          return MaterialPageRoute(builder: (_) => ViewPhotosScreen());
         }
 
       default:

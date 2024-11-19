@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pg_photo_track/app/api_constants.dart';
 import 'package:pg_photo_track/app/app_pref.dart';
 import 'package:pg_photo_track/domain/user.dart';
@@ -35,6 +36,14 @@ class LoginProvider with ChangeNotifier {
   Future<dynamic> loginUser(String username, String password) async {
     resetFlags();
     // notifyListeners();
+    _isLoading = true;
+    await checkForUpdate();
+    if (_errorMessage != null) {
+      _isLoading = false;
+      // notifyListeners();
+      return;
+    }
+
     dynamic deviceInfo = await DeviceInfo.getUniqueDeviceId();
     print('device info ' + deviceInfo.toString());
     if (deviceInfo is Failure) {
@@ -88,6 +97,20 @@ class LoginProvider with ChangeNotifier {
       _errorMessage = "Login failed. Please try again.";
       _isLoading = false;
       // notifyListeners();
+    }
+  }
+
+  Future<void> checkForUpdate() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String currentVersion = packageInfo.version;
+    print("version " + currentVersion);
+    // Replace 'your_server_url' with your actual server URL
+    final response = await _loginRepository.checkAppVersion(currentVersion);
+    if (response is Failure) {
+      isLoginSuccess = false;
+      _errorMessage = response.messege;
+    } else {
+      return;
     }
   }
 

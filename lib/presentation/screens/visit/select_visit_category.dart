@@ -47,7 +47,11 @@ class _SelectVisitCategoryScreenState extends State<SelectVisitCategoryScreen> {
     final visitDetailProvider = Provider.of<VisitDetailProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Select Visit Category")),
+      appBar: AppBar(
+        title: Text("Select Visit Category"),
+        automaticallyImplyLeading: false,
+        leading: IconButton(onPressed: () {}, icon: Icon(Icons.settings)),
+      ),
       body: visitDetailProvider.isLoading
           ? Center(child: CircularProgressIndicator())
           : Padding(

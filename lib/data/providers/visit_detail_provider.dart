@@ -33,6 +33,7 @@ class VisitDetailProvider with ChangeNotifier {
 
   void setLoading(bool value) {
     _isLoading = value;
+    notifyListeners();
   }
 
   void deletePhoto(PhotoDetail photoDetail) {

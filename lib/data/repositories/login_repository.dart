@@ -33,4 +33,8 @@ class LoginRepository {
         apiKey: apiKey, usrCode: usrCode, otp: otp, appNo: appNo, imei: imei);
     return await AppServiceClient.sendOTP(otpRequest);
   }
+
+  Future<dynamic> checkAppVersion(String currentVersion) async {
+    return await AppServiceClient.checkVersion(currentVersion);
+  }
 }

@@ -36,6 +36,8 @@ class _ReviewAndSubmitScreenState extends State<ReviewAndSubmitScreen> {
   Future<void> submitVisitDetails() async {
     EasyLoading.showInfo("Fetching Location...",
         duration: Duration(seconds: 3));
+    // EasyLoading.show();
+    _visitDetailProvider!.setLoading(true);
     // Position position = await Geolocator.getCurrentPosition(
     //   desiredAccuracy: LocationAccuracy.high,
     // );

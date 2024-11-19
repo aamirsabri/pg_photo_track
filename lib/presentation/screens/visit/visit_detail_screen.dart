@@ -15,6 +15,7 @@ class VisitDetailScreen extends StatefulWidget {
 }
 
 class _VisitDetailScreenState extends State<VisitDetailScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
@@ -32,17 +33,86 @@ class _VisitDetailScreenState extends State<VisitDetailScreen> {
     visitDetailProvider.visitDetail.selectedCategory = selectedCategory;
   }
 
+  Widget buildDrawer() {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: ColorManager.primary,
+            ),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Add your app icon here
+                  Image.asset(
+                    'assets/images/pgvclicon.jpg',
+                    width: 80,
+                    height: 80,
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  const Text('FIELD PHOTO PGVCL',
+                      style: TextStyle(color: Colors.white, fontSize: 16)),
+                ],
+              ),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.photo_album),
+            title: Text(
+              'View Photos',
+              style: getMediumStyle(
+                  fontColor: ColorManager.darkgrey,
+                  fontSize: FontSize.mediumLargeSize),
+            ),
+            onTap: () {
+              // Handle view photos action
+              // _scaffoldKey.currentState!.closeDrawer();
+              Navigator.pushNamed(context, Routes.viewPhotos);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: Text(
+              'Logout',
+              style: getMediumStyle(
+                  fontColor: ColorManager.darkgrey,
+                  fontSize: FontSize.mediumLargeSize),
+            ),
+            onTap: () {
+              // Handle logout action
+              // Implement your logout logic here
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final visitDetailProvider = Provider.of<VisitDetailProvider>(context);
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
-          title: Text(
-        "Visit Details",
-        style: getMediumStyle(
-            fontColor: ColorManager.white, fontSize: FontSize.mediumLargeSize),
-      )),
+        title: Text(
+          "Visit Details",
+          style: getMediumStyle(
+              fontColor: ColorManager.white,
+              fontSize: FontSize.mediumLargeSize),
+        ),
+        leading: IconButton(
+            onPressed: () {
+              _scaffoldKey.currentState?.openDrawer();
+            },
+            icon: Icon(Icons.settings)),
+      ),
+      drawer: buildDrawer(),
       body: visitDetailProvider.isLoading
           ? Center(child: CircularProgressIndicator())
           : Padding(
@@ -66,64 +136,11 @@ class _VisitDetailScreenState extends State<VisitDetailScreen> {
                       ),
                     ],
                   ),
-                  // Text(
-                  //   "Visit Identifier (Optional)",
-                  //   style: getMediumStyle(
-                  //       fontColor: ColorManager.primaryFontOpacity70,
-                  //       fontSize: FontSize.mediumSize),
-                  // ),
-                  // SizedBox(
-                  //   height: 4,
-                  // ),
 
-                  // TextField(
-                  //   decoration: InputDecoration(
-                  //       labelText:
-                  //           "SR No, Consumer No, Feeder No etc.. if any"),
-                  //   onChanged: (value) {
-                  //     visitDetailProvider.setVisitLabel(value);
-                  //   },
-                  // ),
-                  // SizedBox(height: 32),
-                  // Text(
-                  //   "Remark",
-                  //   style: getMediumStyle(
-                  //       fontColor: ColorManager.primaryFontOpacity70,
-                  //       fontSize: FontSize.regularSize),
-                  // ),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(vertical: 8),
-                  //   child: TextField(
-                  //     keyboardType: TextInputType.multiline,
-                  //     decoration: const InputDecoration(
-                  //       border: OutlineInputBorder(),
-                  //       hintText: 'Enter Remark',
-                  //     ),
-                  //     minLines: 3,
-                  //     maxLines: 3,
-                  //     onChanged: (value) {
-                  //       visitDetailProvider.visitDetail.setRemarkd(value);
-                  //     },
-                  //   ),
-                  // ),
-
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   CategorySelectionWidget(
                       categories: visitDetailProvider!.categories,
                       onCategorySelected: onCategorySelected),
-                  // TextField for visit label
-
-                  // TextField for visit remarks
-                  // TextField(
-                  //   decoration: InputDecoration(labelText: "Remarks"),
-                  //   maxLines: 5,
-                  //   onChanged: (value) {
-                  //     visitDetailProvider.setVisitRemarks(value);
-                  //   },
-                  // ),
-                  // Spacer(),
-
-                  // Submit button
                 ],
               ),
             ),

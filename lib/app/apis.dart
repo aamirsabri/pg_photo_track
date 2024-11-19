@@ -136,6 +136,31 @@ class AppServiceClient {
     }
   }
 
+  static Future<dynamic> checkVersion(String currentVersion) async {
+    try {
+      var url = Uri.parse(Constant.baseUrl + Constant.checkVersion);
+      Map<String, dynamic> argument = {"version": currentVersion.toString()};
+      var response = await getRawHttp(url, argument);
+      if (response is Failure) {
+        return response;
+      }
+      if (response == null) {
+        return Failure(ResponseCode.UNKNOWN, ResponseMessage.UNKNOWN);
+      }
+
+      if (response['status'] == 200) {
+        print("code" + response['status'].toString());
+        // print("USER " + response[JSON_OBJECT_USER].toString());
+        return response['message'];
+      } else {
+        return Failure(
+            int.parse(response['status'].toString()), response['message']);
+      }
+    } catch (e) {
+      return Failure(ResponseCode.UNKNOWN, ResponseMessage.UNKNOWN);
+    }
+  }
+
   static Future<dynamic> fetchImage(String visitId) async {
     final response = await http.post(
       Uri.parse(Constant.baseUrl + Constant.viewPhoto),
