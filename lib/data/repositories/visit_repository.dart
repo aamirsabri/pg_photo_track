@@ -27,6 +27,12 @@ class VisitRepository {
     return result;
   }
 
+  Future<dynamic> getPhotosFromVisitId(int visitId) async {
+    final result = await AppServiceClient.getPhotosByVisit(visitId.toString());
+    print("repository result " + result.toString());
+    return result;
+  }
+
   Future<dynamic> submitVisitDetailsWithPhotos({
     required VisitDetail visitDetail,
     UserModel? user,

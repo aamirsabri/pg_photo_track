@@ -79,13 +79,21 @@ class OTPRequest {
 class Category {
   final String id;
   final String name;
+  String? groupId;
+  String? groupName;
 
-  Category({required this.id, required this.name});
+  Category(
+      {required this.id, required this.name, this.groupId, this.groupName});
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
       id: json['category_id'] as String,
       name: json['category_name'] as String,
+      groupId:
+          json.containsKey('group_id') ? json['group_id'].toString() : null,
+      groupName: json.containsKey('category_group')
+          ? json['category_group'].toString()
+          : null,
     );
   }
 }

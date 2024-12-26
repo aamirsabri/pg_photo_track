@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:pg_photo_track/data/providers/login_provider.dart';
 import 'package:pg_photo_track/data/providers/visit_detail_provider.dart';
 import 'package:pg_photo_track/model/request.dart';
 import 'package:pg_photo_track/presentation/color_manager.dart';
@@ -35,60 +37,93 @@ class _VisitDetailScreenState extends State<VisitDetailScreen> {
 
   Widget buildDrawer() {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: ColorManager.primary,
-            ),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Add your app icon here
-                  Image.asset(
-                    'assets/images/pgvclicon.jpg',
-                    width: 80,
-                    height: 80,
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  const Text('FIELD PHOTO PGVCL',
-                      style: TextStyle(color: Colors.white, fontSize: 16)),
-                ],
+      backgroundColor: ColorManager.primary,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: ColorManager.primary,
+              ),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Add your app icon here
+                    Image.asset(
+                      'assets/images/pgvclicon.jpg',
+                      width: 40,
+                      height: 40,
+                    ),
+                    const SizedBox(
+                      width: 12,
+                    ),
+                    const Text('FIELD PHOTO',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 27,
+                            fontWeight: FontWeight.bold)),
+                  ],
+                ),
               ),
             ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.photo_album),
-            title: Text(
-              'View Photos',
-              style: getMediumStyle(
-                  fontColor: ColorManager.darkgrey,
-                  fontSize: FontSize.mediumLargeSize),
+            ListTile(
+              leading: const Icon(
+                Icons.home,
+                color: Colors.white,
+              ),
+              title: Text(
+                'Home',
+                style: getMediumStyle(
+                    fontColor: ColorManager.white,
+                    fontSize: FontSize.mediumLargeSize),
+              ),
+              onTap: () {
+                // Handle view photos action
+                // Scaffold.of(context).closeDrawer();
+                Navigator.pushNamed(context, Routes.visetDetail);
+              },
             ),
-            onTap: () {
-              // Handle view photos action
-              // _scaffoldKey.currentState!.closeDrawer();
-              Navigator.pushNamed(context, Routes.viewPhotos);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: Text(
-              'Logout',
-              style: getMediumStyle(
-                  fontColor: ColorManager.darkgrey,
-                  fontSize: FontSize.mediumLargeSize),
+            ListTile(
+              leading: const Icon(
+                Icons.photo_album,
+                color: Colors.white,
+              ),
+              title: Text(
+                'View Photos',
+                style: getMediumStyle(
+                    fontColor: ColorManager.white,
+                    fontSize: FontSize.mediumLargeSize),
+              ),
+              onTap: () {
+                // Handle view photos action
+                // Scaffold.of(context).closeDrawer();
+                Navigator.pushNamed(context, Routes.viewPhotos);
+              },
             ),
-            onTap: () {
-              // Handle logout action
-              // Implement your logout logic here
-            },
-          ),
-        ],
+            Spacer(),
+            ListTile(
+              leading: const Icon(
+                Icons.logout,
+                color: Colors.white,
+              ),
+              title: Text(
+                'Logout',
+                style: getMediumStyle(
+                    fontColor: ColorManager.white,
+                    fontSize: FontSize.mediumLargeSize),
+              ),
+              onTap: () async {
+                await Provider.of<LoginProvider>(context, listen: false)
+                    .logOut(context);
+                // Handle logout action
+                // Implement your logout logic here
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -97,69 +132,109 @@ class _VisitDetailScreenState extends State<VisitDetailScreen> {
   Widget build(BuildContext context) {
     final visitDetailProvider = Provider.of<VisitDetailProvider>(context);
 
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text(
-          "Visit Details",
-          style: getMediumStyle(
-              fontColor: ColorManager.white,
-              fontSize: FontSize.mediumLargeSize),
-        ),
-        leading: IconButton(
-            onPressed: () {
-              _scaffoldKey.currentState?.openDrawer();
-            },
-            icon: Icon(Icons.settings)),
-      ),
-      drawer: buildDrawer(),
-      body: visitDetailProvider.isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ListView(
-                shrinkWrap: false,
-                // crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Dropdown for category selection
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Select Purpose',
-                        style: getMediumStyle(
-                            fontColor: ColorManager.primaryFont,
-                            fontSize: FontSize.bigSize),
-                      ),
-                    ],
-                  ),
+    return PopScope(
+      onPopInvokedWithResult: (didPop, _) async {
+        //do your logic here:
 
-                  const SizedBox(height: 24),
-                  CategorySelectionWidget(
-                      categories: visitDetailProvider!.categories,
-                      onCategorySelected: onCategorySelected),
-                ],
+        final shouldPop = await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Confirm Exit'),
+            content: Text('Are you sure you want    to exit?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text('No'),
               ),
-            ),
-      bottomNavigationBar: BottomAppBar(
-        child: ElevatedButton(
-          onPressed: visitDetailProvider.isFormValid()
-              ? () {
-                  // Proceed to next screen (e.g., photo capture)
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return PhotoDetailScreen(
-                        category: visitDetailProvider!.defaultCategory!);
-                  }));
-                }
-              : null,
-          child: Text(
-            "Next - Add Photo Detail",
+              TextButton(
+                onPressed: () => SystemNavigator.pop(),
+                child: Text('Yes'),
+              ),
+            ],
+          ),
+        );
+
+        // Return    the result to the previous route
+        return shouldPop;
+      },
+      canPop: false,
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: Text(
+            "Visit Purpose",
             style: getMediumStyle(
                 fontColor: ColorManager.white,
                 fontSize: FontSize.mediumLargeSize),
+          ),
+          leading: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: IconButton(
+              onPressed: () {
+                _scaffoldKey.currentState?.openDrawer();
+              },
+              icon: Image.asset(
+                'assets/images/ham.png',
+                width: 50,
+                height: 50,
+                fit: BoxFit.fill,
+                color: ColorManager.white,
+              ),
+            ),
+          ),
+          leadingWidth: 45,
+        ),
+        drawer: buildDrawer(),
+        body: visitDetailProvider.isLoading
+            ? Center(child: CircularProgressIndicator())
+            : Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ListView(
+                  shrinkWrap: false,
+                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Dropdown for category selection
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Select Purpose',
+                          style: getMediumStyle(
+                              fontColor: ColorManager.primaryFont,
+                              fontSize: FontSize.bigSize),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 24),
+                    CategorySelectionWidget(
+                        categories: visitDetailProvider!.categories,
+                        initialCategory: visitDetailProvider.defaultCategory,
+                        onCategorySelected: onCategorySelected),
+                  ],
+                ),
+              ),
+        bottomNavigationBar: BottomAppBar(
+          child: ElevatedButton(
+            onPressed: visitDetailProvider.isFormValid()
+                ? () {
+                    // Proceed to next screen (e.g., photo capture)
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return PhotoDetailScreen(
+                          category: visitDetailProvider!.defaultCategory!);
+                    }));
+                  }
+                : null,
+            child: Text(
+              "Next - Add Photo Detail",
+              style: getMediumStyle(
+                  fontColor: ColorManager.white,
+                  fontSize: FontSize.mediumLargeSize),
+            ),
           ),
         ),
       ),

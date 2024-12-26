@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _userIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   LoginProvider? _loginProvider;
-
+  int count = 0;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -43,6 +43,16 @@ class _LoginScreenState extends State<LoginScreen> {
     _loginProvider = Provider.of<LoginProvider>(context);
     EasyLoading.dismiss();
     super.didChangeDependencies();
+    if (count <= 0) {
+      EasyLoading.show();
+      await _loginProvider!.autoLogin();
+      EasyLoading.dismiss();
+      if (_loginProvider!.isLoginSuccess == true) {
+        Navigator.pushNamed(context, Routes.visetDetail);
+      }
+    }
+
+    count = count + 1;
   }
 
   @override

@@ -49,27 +49,15 @@ class _ViewPhotosScreenState extends State<ViewPhotosScreen> {
     final recentVisitProvider = Provider.of<RecentVisitProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset(
-              'assets/images/pgvclicon.jpg',
-              width: 32,
-              height: 32,
-            ),
-            const SizedBox(width: 8),
-            const Expanded(
-              child: Text(
-                'View Photos',
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
+        title: Text(
+          'View Photos',
+          textAlign: TextAlign.center,
         ),
-        automaticallyImplyLeading: false,
-        centerTitle: false,
-        // automaticallyImplyLeading: false,
       ),
+      // automaticallyImplyLeading: false,
+
+      // automaticallyImplyLeading: false,
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Consumer<RecentVisitProvider>(

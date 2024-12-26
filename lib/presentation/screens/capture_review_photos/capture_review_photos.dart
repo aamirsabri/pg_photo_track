@@ -38,10 +38,16 @@ class _CaptureReviewPhotosState extends State<CaptureReviewPhotos> {
     // });
     _visitDetailProvider!.setLoading(true);
     int count = _visitDetailProvider!.photos.length;
+    if (count >= 3) {
+      _visitDetailProvider!.setLoading(false);
+      EasyLoading.showError('Maximum 3 Photos can be uploaded');
+      return false;
+    }
     EasyLoading.show();
     // Pick Image from Camera
     XFile? photo = await _picker.pickImage(source: ImageSource.camera);
     if (photo == null) {
+      _visitDetailProvider!.setLoading(false);
       EasyLoading.dismiss();
       return false;
     }
@@ -50,7 +56,7 @@ class _CaptureReviewPhotosState extends State<CaptureReviewPhotos> {
     XFile? compressedPhoto = await ImageCompressor.compressImage(
         image: File(photo.path), count: count);
     if (compressedPhoto == null) {
-      print("error in compressing");
+      // print("error in compressing");
     } else {
       // print("main file lenght in bytes");
       // print(await photo.length());
@@ -111,6 +117,7 @@ class _CaptureReviewPhotosState extends State<CaptureReviewPhotos> {
       _visitDetailProvider = _visitDetailProvider =
           Provider.of<VisitDetailProvider>(context, listen: false);
       _visitDetailProvider!.updateLocation();
+      setState(() {});
     });
   }
 
@@ -165,7 +172,7 @@ class _CaptureReviewPhotosState extends State<CaptureReviewPhotos> {
                                       "Lat: ${photoDetail.latitude}\nLng: ${photoDetail.longitude}",
                                       textAlign: TextAlign.center,
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 4,
                                     ),
                                     GestureDetector(
@@ -183,13 +190,13 @@ class _CaptureReviewPhotosState extends State<CaptureReviewPhotos> {
                                         ),
                                       ),
                                       onTap: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return SelectVisitCategoryScreen(
-                                            category: photoDetail.category!,
-                                          );
-                                        }));
+                                        // Navigator.push(context,
+                                        //     MaterialPageRoute(
+                                        //         builder: (context) {
+                                        //   return SelectVisitCategoryScreen(
+                                        //     category: photoDetail.category!,
+                                        //   );
+                                        // }));
                                       },
                                     ),
                                   ],

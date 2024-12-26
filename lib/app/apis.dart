@@ -209,4 +209,32 @@ class AppServiceClient {
       return Failure(ResponseCode.UNKNOWN, ResponseMessage.UNKNOWN);
     }
   }
+
+  static Future<dynamic> getPhotosByVisit(String visitId) async {
+    try {
+      var url = Uri.parse(Constant.baseUrl + Constant.viewPhotos);
+      Map<String, dynamic> argument = {ApiConstants.JSON_VISIT_ID: visitId};
+      var response = await getRawHttp(url, argument);
+      if (response is Failure) {
+        return response;
+      }
+      if (response == null) {
+        return Failure(ResponseCode.UNKNOWN, ResponseMessage.UNKNOWN);
+      }
+      if (response['status'] == 200) {
+        late List<dynamic> visitPhotos = response['photos'];
+        return visitPhotos
+            .map((json) => VisitPhotosReponse.fromJson(json))
+            .toList();
+      } else {
+        if (response['status'] is int) {
+          return Failure(response['status'], response['message']);
+        } else {
+          return Failure(ResponseCode.UNKNOWN, ResponseMessage.UNKNOWN);
+        }
+      }
+    } catch (e) {
+      return Failure(ResponseCode.UNKNOWN, ResponseMessage.UNKNOWN);
+    }
+  }
 }

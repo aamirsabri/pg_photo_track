@@ -33,6 +33,17 @@ class LoginProvider with ChangeNotifier {
     successMessage = null;
   }
 
+  Future<dynamic> autoLogin() async {
+    AppPreference appPreference =
+        AppPreference(await SharedPreferences.getInstance());
+    final result = await appPreference.fetchUser();
+    if (result == null) {
+      return null;
+    }
+    UserModel userModel = result;
+    await loginUser(userModel.userId!, userModel.password!);
+  }
+
   Future<dynamic> loginUser(String username, String password) async {
     resetFlags();
     // notifyListeners();
@@ -115,7 +126,9 @@ class LoginProvider with ChangeNotifier {
   }
 
   Future<void> logOut(BuildContext context) async {
-    await AppPreference(await SharedPreferences.getInstance()).setUserId('');
+    final sharedpref = await SharedPreferences.getInstance();
+    sharedpref.clear();
+
     Navigator.pushNamed(context, Routes.loginRoute);
   }
 

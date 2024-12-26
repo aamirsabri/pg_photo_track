@@ -82,7 +82,7 @@ class PhotoDetailScreen extends StatelessWidget {
             CustomButton(
                 label: 'Next - Take Photo',
                 onPressed: () {
-                  Navigator.pushNamed(context, Routes.takePhoto);
+                  Navigator.pushNamed(context, Routes.reviewPhotos);
                 }),
           ],
         ),

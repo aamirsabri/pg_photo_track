@@ -1,3 +1,4 @@
+import 'package:pg_photo_track/domain/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const String PREF_KEY_EMP_ID = "PREF_KEY_EMP_ID";
@@ -7,6 +8,9 @@ class AppPreference {
   static String USER_ID = "USERNAME";
   static String PASSWORD = "PASSWORD";
   static String IMEI = "IMEI";
+  static String APPNO = 'APPNO';
+  static String LOCATIONCODE = 'LOCATIONCODE';
+  static String LOCATIONNAME = 'LOCATIONNAME';
 
   // AppP(){
   //   this._sharedPreferences = SharedPreferences.getInstance();
@@ -32,6 +36,20 @@ class AppPreference {
     } else {
       return value;
     }
+  }
+
+  Future<dynamic> fetchUser() async {
+    String userId = await getValue(USER_ID);
+    if (userId == '') {
+      return null;
+    }
+    String password = await getValue(PASSWORD);
+    UserModel user = UserModel(userId: userId, password: password);
+    user.imei = await getValue(IMEI);
+    user.appNo = await getValue(APPNO);
+    user.locationCode = await getValue(LOCATIONCODE);
+    user.locationName = await getValue(LOCATIONNAME);
+    return user;
   }
 
   Future setPref(String key, String value) async {

@@ -14,6 +14,7 @@ class Constant {
   static const String uploadVisit = '/visitpic_upload_visit.php';
   static const String getRecentUploads = "/visitpic_recent_upload_visits.php";
   static const String viewPhoto = "/visitpic_display_image.php";
+  static const String viewPhotos = "/visitpic_display_images.php";
   static const String checkVersion = '/visitpic_check_version.php';
 
   static const String getHolidayList = "/attendance_get_holidays.php";

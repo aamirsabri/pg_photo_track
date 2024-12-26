@@ -65,4 +65,23 @@ class RecentVisitProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<dynamic> fetchPhotosFromVisitId(int visitId) async {
+    isLoading = true;
+    errorMessage = null;
+    hasError = false;
+    // notifyListeners();
+    print("visit it  " + visitId.toString());
+    try {
+      final result = await _visitRepository.getPhotosFromVisitId(visitId);
+      print("resutl " + result.toString());
+      isLoading = false;
+      return result;
+    } catch (e) {
+      isLoading = false;
+      hasError = true;
+      print("Error fetching recent uploads: $e");
+      notifyListeners();
+    }
+  }
 }

@@ -15,4 +15,5 @@ class ApiConstants {
   static const String APP_NO_VAL = "110";
   static const String JSON_RECENT_UPLOADS = "recent_uploads";
   static const String JSON_USER_ID = "user_id";
+  static const String JSON_VISIT_ID = "visit_id";
 }

@@ -56,7 +56,7 @@ class VisitDetailProvider with ChangeNotifier {
   void addPhoto(
       File photo, String? remark, double? latitude, double? longitude) async {
     print("my location " + myLocation!.latitude.toString());
-    _photos.clear();
+    // _photos.clear();
     _photos.add(
       PhotoDetail(
           photo: photo,

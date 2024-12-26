@@ -6,6 +6,7 @@ import 'package:pg_photo_track/presentation/screens/capture_review_photos/captur
 import 'package:pg_photo_track/presentation/screens/capture_review_photos/capture_review_photos.dart';
 import 'package:pg_photo_track/presentation/screens/home_screen.dart';
 import 'package:pg_photo_track/presentation/screens/recent_photos/view_photos.dart';
+import 'package:pg_photo_track/presentation/screens/test/test.dart';
 
 import 'package:pg_photo_track/presentation/screens/visit/review_submit_screen.dart';
 import 'package:pg_photo_track/presentation/screens/visit/select_visit_category.dart';
@@ -45,6 +46,10 @@ class RouteGenerator {
       case Routes.otpRoute:
         {
           return MaterialPageRoute(builder: (_) => OtpScreen());
+        }
+      case Routes.testRoute:
+        {
+          return MaterialPageRoute(builder: (_) => TestScreen());
         }
       // case Routes.selectCategory:
       //   {

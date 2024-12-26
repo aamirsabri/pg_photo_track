@@ -86,3 +86,36 @@ class RecentUpload {
     );
   }
 }
+
+class VisitPhotosReponse {
+  final int photoId;
+  String? category;
+  String? remark;
+  double? photoLat;
+  double? photoLng;
+  String? photo;
+
+  VisitPhotosReponse({
+    required this.photoId,
+    this.category,
+    this.remark,
+    this.photoLat,
+    this.photoLng,
+    this.photo,
+  });
+
+  factory VisitPhotosReponse.fromJson(Map<String, dynamic> json) {
+    print("photo id " + int.parse(json['photo_id']).toString());
+    return VisitPhotosReponse(
+        photoId: int.parse(json['photo_id'].toString()),
+        category: json.containsKey('category') ? json['category'] : null,
+        remark: json.containsKey('remark') ? json['remark'] : null,
+        photoLat: json.containsKey('photo_lat')
+            ? convertJsonStringToDouble(json['photo_lat'])
+            : null,
+        photoLng: json.containsKey('photo_lng')
+            ? convertJsonStringToDouble(json['photo_lng'])
+            : null,
+        photo: json['photo']);
+  }
+}

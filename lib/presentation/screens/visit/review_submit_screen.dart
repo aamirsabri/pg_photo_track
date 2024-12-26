@@ -7,6 +7,7 @@ import 'package:pg_photo_track/data/providers/visit_detail_provider.dart';
 import 'package:pg_photo_track/domain/mylocation.dart';
 import 'package:pg_photo_track/presentation/color_manager.dart';
 import 'package:pg_photo_track/presentation/font_manager.dart';
+import 'package:pg_photo_track/presentation/route_manager.dart';
 
 import 'package:pg_photo_track/presentation/style_manager.dart';
 import 'package:pg_photo_track/presentation/widgets/label_value_widget.dart';
@@ -89,22 +90,50 @@ class _ReviewAndSubmitScreenState extends State<ReviewAndSubmitScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Text(
-                    "Captured Photo",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
                   Container(
-                    margin: EdgeInsets.all(8),
-                    width: MediaQuery.of(context).size.width,
-                    height: 200,
+                    padding: EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
+                        color: ColorManager.secondary,
+                        borderRadius: BorderRadius.circular(8)),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Total Captured Photos : ${_visitDetailProvider!.photos.length}",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: ColorManager.white),
+                          ),
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'View Photos',
+                              style:
+                                  getMediumStyle(fontColor: ColorManager.white),
+                            ))
+                      ],
                     ),
-                    child: Image.file(_visitDetailProvider!.photos[0].photo,
-                        fit: BoxFit.cover),
                   ),
+                  // const Text(
+                  //   "Captured Photo",
+                  //   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  // ),
+                  // Container(
+                  //   margin: EdgeInsets.all(8),
+                  //   width: MediaQuery.of(context).size.width,
+                  //   height: 200,
+                  //   decoration: BoxDecoration(
+                  //     border: Border.all(color: Colors.grey),
+                  //   ),
+                  //   child: Image.file(_visitDetailProvider!.photos[0].photo,
+                  //       fit: BoxFit.cover),
+                  // ),
                   const SizedBox(
-                    height: 20,
+                    height: 26,
                   ),
                   Text(
                     "Remark",
@@ -141,56 +170,61 @@ class _ReviewAndSubmitScreenState extends State<ReviewAndSubmitScreen> {
                 ],
               ),
             ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(children: [
-          Expanded(
-            child: ElevatedButton(
-              onPressed: () async {
-                Navigator.pop(context);
-              },
-              child: Text(
-                "BACK",
-                style: getMediumStyle(
-                    fontColor: ColorManager.white,
-                    fontSize: FontSize.mediumSize),
-              ),
+      bottomNavigationBar: _visitDetailProvider!.isLoading
+          ? null
+          : BottomAppBar(
+              child: Row(children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      "BACK",
+                      style: getMediumStyle(
+                          fontColor: ColorManager.white,
+                          fontSize: FontSize.mediumSize),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 8,
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        await submitVisitDetails();
+                        print("submit done");
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text("Photos uploaded successfully")),
+                        );
+                        // Navigator.of(context)
+                        //     .popUntil(ModalRoute.withName(Routes.photoDetail));
+
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          Routes.visetDetail,
+                          (route) => false,
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text("Failed to upload visit details")),
+                        );
+                      }
+                    },
+                    child: Text(
+                      "SUBMIT",
+                      style: getMediumStyle(
+                          fontColor: ColorManager.white,
+                          fontSize: FontSize.mediumSize),
+                    ),
+                  ),
+                ),
+              ]),
             ),
-          ),
-          SizedBox(
-            width: 8,
-          ),
-          Expanded(
-            child: ElevatedButton(
-              onPressed: () async {
-                try {
-                  await submitVisitDetails();
-                  print("submit done");
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Photos uploaded successfully")),
-                  );
-                  // Navigator.popUntil(
-                  //     context, ModalRoute.withName(Routes.visetDetail));
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/home',
-                    (route) => false,
-                  );
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Failed to upload visit details")),
-                  );
-                }
-              },
-              child: Text(
-                "SUBMIT",
-                style: getMediumStyle(
-                    fontColor: ColorManager.white,
-                    fontSize: FontSize.mediumSize),
-              ),
-            ),
-          ),
-        ]),
-      ),
     );
   }
 }

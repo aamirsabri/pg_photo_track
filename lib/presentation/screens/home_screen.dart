@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(width: 8),
               const Expanded(
                 child: Text(
-                  'Home',
+                  'Home1',
                   textAlign: TextAlign.center,
                 ),
               ),

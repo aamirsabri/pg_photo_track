@@ -5,6 +5,7 @@ import 'package:pg_photo_track/model/visit_detail.dart';
 import 'package:pg_photo_track/presentation/color_manager.dart';
 import 'package:pg_photo_track/presentation/font_manager.dart';
 import 'package:pg_photo_track/presentation/screens/recent_photos/photo_view_screen.dart';
+import 'package:pg_photo_track/presentation/screens/recent_photos/photos_view_grid_screen.dart';
 import 'package:pg_photo_track/presentation/style_manager.dart';
 import 'package:pg_photo_track/presentation/widgets/date_widget.dart';
 
@@ -86,7 +87,9 @@ class RecentUploadCard extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return PhotoDisplayScreen(visitId: visit.visitId);
+                      return PhotosViewGridScreen(
+                          visitId: visit.visitId,
+                          category: visit.visitCategory);
                     }));
                   },
                   icon: Icon(
